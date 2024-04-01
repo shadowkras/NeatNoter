@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<Version>2.5.1.0</Version>
+		<Version>2.5.2.0</Version>
 		<Title>NeatNoter</Title>
 		<Authors>kalilistic, karashiiro</Authors>
-		<TargetFramework>net7.0-windows</TargetFramework>
+		<TargetFramework>net8.0-windows</TargetFramework>
 		<Platforms>x64</Platforms>
 		<LangVersion>latest</LangVersion>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>

@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Numerics;
+using System.Text;
 using System.Timers;
 
 using CheapLoc;
@@ -125,7 +126,7 @@ public class NotebookService : BaseRepository
             var fullPath = Path.Combine(exportDir, filename);
 
             // Write notes to CSV
-            using (var writer = new StreamWriter(fullPath))
+            using (var writer = new StreamWriter(fullPath, false, Encoding.UTF8))
             using (var csv = new CsvHelper.CsvWriter(writer, CultureInfo.InvariantCulture))
             {
                 // Write headers

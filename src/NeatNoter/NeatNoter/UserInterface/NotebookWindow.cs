@@ -110,7 +110,8 @@ namespace NeatNoter
             if (this.isDeprecationWarningVisible)
             {
                 ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.DalamudYellow);
-                ImGui.TextWrapped("NeatNoter will stop working with Dawntrail's launch and won't get updates.\n" +
+                ImGui.TextWrapped("NeatNoter will stop working with the Dawntrail launch and won't get updates.\n" +
+                                  "I'm no longer interested in supporting the plugin and I haven't been able to find a developer to take over.\n" +
                                   "Please use the Export Button below to save your notes as a CSV file.\n" +
                                   "Look into other plugins like NOTED or other note taking tools.\n" +
                                   "You'll see this message when the game starts, but you can access your notes by clicking OK.\n" +
