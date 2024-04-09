@@ -2,7 +2,7 @@
 	<PropertyGroup>
 		<Version>2.5.3.0</Version>
 		<Title>NeatNoter</Title>
-		<Authors>kalilistic, karashiiro</Authors>
+		<Authors>kalilistic, karashiiro, shadowkras</Authors>
 		<TargetFramework>net8.0-windows</TargetFramework>
 		<Platforms>x64</Platforms>
 		<LangVersion>latest</LangVersion>
