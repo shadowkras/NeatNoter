@@ -1,6 +1,6 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<Version>2.5.2.0</Version>
+		<Version>2.5.3.0</Version>
 		<Title>NeatNoter</Title>
 		<Authors>kalilistic, karashiiro</Authors>
 		<TargetFramework>net8.0-windows</TargetFramework>
