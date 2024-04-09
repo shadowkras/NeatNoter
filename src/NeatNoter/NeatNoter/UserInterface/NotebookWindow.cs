@@ -36,7 +36,7 @@ namespace NeatNoter
         private static readonly uint TextColor = ImGui.GetColorU32(ImGuiCol.Text);
 
         private string exportResult = string.Empty;
-        private bool isDeprecationWarningVisible = true;
+        private bool isDeprecationWarningVisible = false;
         private bool categoryWindowVisible;
         private bool deletionWindowVisible;
         private bool backgroundVisible;
