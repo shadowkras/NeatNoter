@@ -1,9 +1,9 @@
 using System.Numerics;
 
 using CheapLoc;
-using Dalamud.DrunkenToad;
 using Dalamud.DrunkenToad.Extensions;
 using Dalamud.Interface.Colors;
+using Dalamud.Interface.Utility;
 using ImGuiNET;
 
 namespace NeatNoter
@@ -13,6 +13,8 @@ namespace NeatNoter
     /// </summary>
     public class SettingsWindow : PluginWindow
     {
+        public bool IsHideConfigurationConfirmationWindowVisible;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="SettingsWindow"/> class.
         /// </summary>
@@ -24,6 +26,7 @@ namespace NeatNoter
             this.RespectCloseHotkey = true;
             this.Size = new Vector2(300f, 400f);
             this.SizeCondition = ImGuiCond.Appearing;
+            this.IsHideConfigurationConfirmationWindowVisible = false;
         }
 
         /// <inheritdoc/>
@@ -64,14 +67,34 @@ namespace NeatNoter
 
         private void DrawDisplay()
         {
+            if (this.DrawHideConfigurationConfirmationWindow(ref this.IsHideConfigurationConfirmationWindowVisible))
+            {
+                this.plugin.Configuration.ShowConfigurationTab = false;
+                this.plugin.SaveConfig();
+            }
+
             ImGui.TextColored(ImGuiColors.DalamudViolet, Loc.Localize("Display", "Display"));
-            ImGui.BeginChild("###Display", new Vector2(-1, 95f), true);
+            ImGui.BeginChild("###Display", new Vector2(-1, 120f), true);
             {
                 var showContentPreview = this.plugin.Configuration.ShowContentPreview;
                 if (ImGui.Checkbox(Loc.Localize("ShowContentPreview", "Show content preview"), ref showContentPreview))
                 {
                     this.plugin.Configuration.ShowContentPreview = showContentPreview;
                     this.plugin.SaveConfig();
+                }
+
+                var showConfigurationTab = this.plugin.Configuration.ShowConfigurationTab;
+                if (ImGui.Checkbox(Loc.Localize("ShowConfigurationTab", "Show configuration tab"), ref showConfigurationTab))
+                {
+                    if (!showConfigurationTab)
+                    {
+                        this.IsHideConfigurationConfirmationWindowVisible = true;
+                    }
+                    else
+                    {
+                        this.plugin.Configuration.ShowConfigurationTab = true;
+                        this.plugin.SaveConfig();
+                    }
                 }
 
                 var lockPosition = this.plugin.Configuration.LockPosition;
@@ -108,6 +131,35 @@ namespace NeatNoter
 
             ImGui.EndChild();
             ImGui.Spacing();
+        }
+
+        private bool DrawHideConfigurationConfirmationWindow(ref bool isVisible)
+        {
+            if (!isVisible)
+                return false;
+
+            var ret = false;
+
+            ImGui.SetNextWindowSize(ImGuiHelpers.ScaledVector2(350f, 120f), ImGuiCond.Always);
+            ImGui.Begin(Loc.Localize("HideConfigConfirmationHeader", "NeatNoter Hide Configuration Confirmation"), ImGuiWindowFlags.NoResize);
+
+            ImGui.Text(Loc.Localize("HideConfigConfirmationSubHeader", "Are you sure you want to hide the configuration tab?"));
+            ImGui.Text(Loc.Localize("HideConfigConfirmationInfo", "You can access it using /notebookconf command later."));
+            if (ImGui.Button(Loc.Localize("Yes", "Yes")))
+            {
+                isVisible = false;
+                ret = true;
+            }
+
+            ImGui.SameLine();
+            if (ImGui.Button(Loc.Localize("No", "No")))
+            {
+                isVisible = false;
+            }
+
+            ImGui.End();
+
+            return ret;
         }
     }
 }

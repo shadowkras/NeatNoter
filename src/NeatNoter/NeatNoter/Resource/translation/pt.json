@@ -150,5 +150,85 @@
     "ShowBackground": {
         "message": "Mostrar fundo",
         "description": "NotebookWindow.DrawDocumentEditor"
+    },
+    "TextEditDisable": {
+        "message": "Desativar edição de texto",
+        "description": "NotebookWindow.DrawDocumentEditor"
+    },
+    "TextEditEnable": {
+        "message": "Ativar edição de texto",
+        "description": "NotebookWindow.DrawDocumentEditor"
+    },
+    "ShowEditorTransparencySlider": {
+        "message": "Exibir slider de transparência",
+        "description": "NotebookWindow.DrawDocumentEditor"
+    },
+    "HideEditorTransparencySlider": {
+        "message": "Esconder slider de transparência",
+        "description": "NotebookWindow.DrawDocumentEditor"
+    },
+    "TransparencySlider": {
+        "message": "Slider de Transparência",
+        "description": "NotebookWindow.DrawTransparencySlider"
+    },
+    "Settings": {
+        "message": "Configurações do NeatNoter",
+        "description": "SettingsWindow..ctor"
+    },
+    "Save": {
+        "message": "Frequência de salvamento",
+        "description": "SettingsWindow.SaveFrequency"
+    },
+    "SaveFrequency": {
+        "message": "Frequência de salvamento (segundos)",
+        "description": "SettingsWindow.SaveFrequency"
+    },
+    "FullSaveFrequency": {
+        "message": "Frequência de salvamento (horas)",
+        "description": "SettingsWindow.SaveFrequency"
+    },
+    "Display": {
+        "message": "Exibição",
+        "description": "SettingsWindow.DrawDisplay"
+    },
+    "ShowContentPreview": {
+        "message": "Exibir prévia de conteúdo",
+        "description": "SettingsWindow.DrawDisplay"
+    },
+    "LockPosition": {
+        "message": "Travar posição",
+        "description": "SettingsWindow.DrawDisplay"
+    },
+    "LockSize": {
+        "message": "Travar redimensionamento",
+        "description": "SettingsWindow.DrawDisplay"
+    },
+    "Search": {
+        "message": "Busca",
+        "description": "SettingsWindow.DrawSearch"
+    },
+    "IncludeNoteContents": {
+        "message": "Incluir conteúdo das notas",
+        "description": "SettingsWindow.DrawSearch"
+    },
+    "Backup": {
+        "message": "Backup",
+        "description": "SettingsWindow.DrawBackup"
+    },
+    "Export": {
+        "message": "Exportar",
+        "description": "SettingsWindow.DrawBackup"
+    },
+    "Import": {
+        "message": "Importar",
+        "description": "SettingsWindow.DrawBackup"
+    },
+    "SecondaryBackupDirectoryPath": {
+        "message": "Diretório de busca secundário",
+        "description": "SettingsWindow.DrawBackup"
+    },
+    "Browse": {
+        "message": "Buscar",
+        "description": "SettingsWindow.DrawBackup"
     }
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 using Dalamud.Configuration;
@@ -102,5 +102,10 @@ namespace NeatNoter
         /// Gets or sets a value indicating whether to show content preview.
         /// </summary>
         public bool ShowContentPreview { get; set; } = true;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether include the configuration tab on the main window.
+        /// </summary>
+        public bool ShowConfigurationTab { get; set; } = true;
     }
 }

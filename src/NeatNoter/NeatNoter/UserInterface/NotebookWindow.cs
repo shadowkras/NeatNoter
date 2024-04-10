@@ -32,6 +32,8 @@ namespace NeatNoter
         /// </summary>
         public Category? CurrentCategory;
 
+        private SettingsWindow settingsWindow;
+
         private const int MaxNoteSize = 1024 * 4196; // You can fit the complete works of Shakespeare in 3.5MB, so this is probably fine.
         private static readonly uint TextColor = ImGui.GetColorU32(ImGuiCol.Text);
 
@@ -50,6 +52,7 @@ namespace NeatNoter
         private string previousNote;
         private ImGuiTabItemFlags noteTabFlags;
         private ImGuiTabItemFlags categoryTabFlags;
+        private ImGuiTabItemFlags configurationTabFlags;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NotebookWindow"/> class.
@@ -68,6 +71,8 @@ namespace NeatNoter
             this.previousNote = string.Empty;
             this.noteTabFlags = ImGuiTabItemFlags.None;
             this.categoryTabFlags = ImGuiTabItemFlags.None;
+            this.configurationTabFlags = ImGuiTabItemFlags.None;
+            this.settingsWindow = new SettingsWindow(this.plugin);
             unsafe
             {
                 this.editorTransparency = ImGui.GetStyleColorVec4(ImGuiCol.FrameBg)->W;
@@ -80,6 +85,7 @@ namespace NeatNoter
             CategoryIndex = 1,
             NoteEdit = 2,
             CategoryEdit = 3,
+            ConfigurationEdit = 99,
         }
 
         private static float InverseFontScale => 1 / ImGui.GetIO().FontGlobalScale;
@@ -109,29 +115,7 @@ namespace NeatNoter
             this.SetWindowFlags();
             if (this.isDeprecationWarningVisible)
             {
-                ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.DalamudYellow);
-                ImGui.TextWrapped("NeatNoter will stop working with the Dawntrail launch and won't get updates.\n" +
-                                  "I'm no longer interested in supporting the plugin and I haven't been able to find a developer to take over.\n" +
-                                  "Please use the Export Button below to save your notes as a CSV file.\n" +
-                                  "Look into other plugins like NOTED or other note taking tools.\n" +
-                                  "You'll see this message when the game starts, but you can access your notes by clicking OK.\n" +
-                                  "Thank you for using NeatNoter!");
-                ImGui.PopStyleColor();
-
-                ImGui.Spacing();
-                if (ImGui.Button("Export"))
-                {
-                    this.exportResult = this.plugin.NotebookService.ExportNotes();
-                }
-
-                ImGui.SameLine();
-                if (ImGui.Button("OK"))
-                {
-                    this.isDeprecationWarningVisible = false;
-                }
-
-                ImGui.Text(this.exportResult);
-
+                this.DisplayDeprecationMessage();
                 return;
             }
 
@@ -148,6 +132,9 @@ namespace NeatNoter
                     break;
                 case UIState.CategoryEdit:
                     this.DrawCategoryEditTool();
+                    break;
+                case UIState.ConfigurationEdit:
+                    this.DrawConfiguration();
                     break;
                 default:
                     this.DrawNoteIndex();
@@ -220,6 +207,45 @@ namespace NeatNoter
             }
 
             this.Flags = flags;
+        }
+
+        private void DrawTabBar()
+        {
+            if (ImGui.BeginTabBar("###NeatNoter_TabBar", ImGuiTabBarFlags.NoTooltip))
+            {
+                if (BeginTabItem(Loc.Localize("Notes", "Notes") + "###NeatNoter_TabItem_Notes", this.noteTabFlags))
+                {
+                    this.SetState(UIState.NoteIndex);
+                    ImGui.EndTabItem();
+                }
+
+                if (BeginTabItem(Loc.Localize("Categories", "Categories") + "###NeatNoter_TabItem_Categories", this.categoryTabFlags))
+                {
+                    this.SetState(UIState.CategoryIndex);
+                    ImGui.EndTabItem();
+                }
+
+                if (this.plugin.Configuration.ShowConfigurationTab)
+                {
+                    if (BeginTabItem(Loc.Localize("Configuration", "Config") + "###NeatNoter_TabItemButton_Configuration", this.configurationTabFlags))
+                    {
+                        this.SetState(UIState.ConfigurationEdit);
+                        ImGui.EndTabItem();
+                    }
+                }
+
+                ImGui.EndTabBar();
+            }
+
+            this.noteTabFlags = ImGuiTabItemFlags.None;
+            this.categoryTabFlags = ImGuiTabItemFlags.None;
+            this.configurationTabFlags = ImGuiTabItemFlags.None;
+        }
+
+        private void DrawConfiguration()
+        {
+            this.DrawTabBar();
+            this.settingsWindow.Draw();
         }
 
         private void DrawNoteIndex()
@@ -426,29 +452,6 @@ namespace NeatNoter
             }
 
             this.DrawDocumentEditor(this.CurrentCategory);
-        }
-
-        private void DrawTabBar()
-        {
-            if (ImGui.BeginTabBar("###NeatNoter_TabBar", ImGuiTabBarFlags.NoTooltip))
-            {
-                if (BeginTabItem(Loc.Localize("Notes", "Notes") + "###NeatNoter_TabItem_Notes", this.noteTabFlags))
-                {
-                    this.SetState(UIState.NoteIndex);
-                    ImGui.EndTabItem();
-                }
-
-                if (BeginTabItem(Loc.Localize("Categories", "Categories") + "###NeatNoter_TabItem_Categories", this.categoryTabFlags))
-                {
-                    this.SetState(UIState.CategoryIndex);
-                    ImGui.EndTabItem();
-                }
-
-                ImGui.EndTabBar();
-            }
-
-            this.noteTabFlags = ImGuiTabItemFlags.None;
-            this.categoryTabFlags = ImGuiTabItemFlags.None;
         }
 
         private void DrawNoteEntry(Note note, int index, float heightOffset)
@@ -757,6 +760,34 @@ namespace NeatNoter
 
             this.lastState = this.state;
             this.state = newState;
+        }
+
+        private void DisplayDeprecationMessage()
+        {
+            ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.DalamudYellow);
+            ImGui.TextWrapped("NeatNoter will stop working with the Dawntrail launch and won't get updates.\n" +
+                              "I'm no longer interested in supporting the plugin and I haven't been able to find a developer to take over.\n" +
+                              "Please use the Export Button below to save your notes as a CSV file.\n" +
+                              "Look into other plugins like NOTED or other note taking tools.\n" +
+                              "You'll see this message when the game starts, but you can access your notes by clicking OK.\n" +
+                              "Thank you for using NeatNoter!");
+            ImGui.PopStyleColor();
+
+            ImGui.Spacing();
+            if (ImGui.Button("Export"))
+            {
+                this.exportResult = this.plugin.NotebookService.ExportNotes();
+            }
+
+            ImGui.SameLine();
+            if (ImGui.Button("OK"))
+            {
+                this.isDeprecationWarningVisible = false;
+            }
+
+            ImGui.Text(this.exportResult);
+
+            return;
         }
     }
 }

@@ -230,5 +230,17 @@
     "Browse": {
         "message": "Browse",
         "description": "SettingsWindow.DrawBackup"
+    },
+    "HideConfigConfirmationHeader": {
+        "message": "NeatNoter Deletion Confirmation",
+        "description": "NotebookWindow.DrawHideConfigurationConfirmationWindow"
+    },
+    "HideConfigConfirmationSubHeader": {
+        "message": "Are you sure you want to hide the configuration tab?",
+        "description": "NotebookWindow.DrawHideConfigurationConfirmationWindow"
+    },
+    "HideConfigConfirmationInfo": {
+        "message": "TYou can access it using /notebookconf command later.",
+        "description": "NotebookWindow.DrawHideConfigurationConfirmationWindow"
     }
 }
