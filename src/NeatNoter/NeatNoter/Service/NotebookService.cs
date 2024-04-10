@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Globalization;
@@ -277,12 +277,12 @@ public class NotebookService : BaseRepository
                 }
                 else if (!string.IsNullOrEmpty(text))
                 {
-                    if (!this.plugin.Configuration.IncludeNoteBodiesInSearch && !note.Name.Contains(text))
+                    if (!this.plugin.Configuration.IncludeNoteBodiesInSearch && !note.Name.Contains(text, StringComparison.InvariantCultureIgnoreCase))
                     {
                         note.IsVisible = false;
                     }
-                    else if (this.plugin.Configuration.IncludeNoteBodiesInSearch && !note.Name.Contains(text) &&
-                             !note.Body.Contains(text))
+                    else if (this.plugin.Configuration.IncludeNoteBodiesInSearch && !note.Name.Contains(text, StringComparison.InvariantCultureIgnoreCase) &&
+                             !note.Body.Contains(text, StringComparison.InvariantCultureIgnoreCase))
                     {
                         note.IsVisible = false;
                     }
