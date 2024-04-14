@@ -6,8 +6,10 @@ using System.Text;
 
 using CheapLoc;
 using Dalamud.DrunkenToad.Helpers;
+using Dalamud.Interface;
 using Dalamud.Interface.Colors;
 using Dalamud.Interface.Utility;
+using Dalamud.Logging;
 using ImGuiNET;
 
 namespace NeatNoter
@@ -32,10 +34,10 @@ namespace NeatNoter
         /// </summary>
         public Category? CurrentCategory;
 
-        private SettingsWindow settingsWindow;
-
         private const int MaxNoteSize = 1024 * 4196; // You can fit the complete works of Shakespeare in 3.5MB, so this is probably fine.
         private static readonly uint TextColor = ImGui.GetColorU32(ImGuiCol.Text);
+
+        private SettingsWindow settingsWindow;
 
         private string exportResult = string.Empty;
         private bool isDeprecationWarningVisible = false;
@@ -52,7 +54,6 @@ namespace NeatNoter
         private string previousNote;
         private ImGuiTabItemFlags noteTabFlags;
         private ImGuiTabItemFlags categoryTabFlags;
-        private ImGuiTabItemFlags configurationTabFlags;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NotebookWindow"/> class.
@@ -71,8 +72,8 @@ namespace NeatNoter
             this.previousNote = string.Empty;
             this.noteTabFlags = ImGuiTabItemFlags.None;
             this.categoryTabFlags = ImGuiTabItemFlags.None;
-            this.configurationTabFlags = ImGuiTabItemFlags.None;
             this.settingsWindow = new SettingsWindow(this.plugin);
+            this.DrawTitleButtons();
             unsafe
             {
                 this.editorTransparency = ImGui.GetStyleColorVec4(ImGuiCol.FrameBg)->W;
@@ -112,33 +113,70 @@ namespace NeatNoter
         /// <inheritdoc/>
         public override void Draw()
         {
-            this.SetWindowFlags();
-            if (this.isDeprecationWarningVisible)
+            try
             {
-                this.DisplayDeprecationMessage();
-                return;
-            }
+                this.SetWindowFlags();
+                if (this.isDeprecationWarningVisible)
+                {
+                    this.DisplayDeprecationMessage();
+                    return;
+                }
 
-            switch (this.state)
+                switch (this.state)
+                {
+                    case UIState.NoteIndex:
+                        this.DrawNoteIndex();
+                        break;
+                    case UIState.CategoryIndex:
+                        this.DrawCategoryIndex();
+                        break;
+                    case UIState.NoteEdit:
+                        this.DrawNoteEditTool();
+                        break;
+                    case UIState.CategoryEdit:
+                        this.DrawCategoryEditTool();
+                        break;
+                    case UIState.ConfigurationEdit:
+                        this.DrawConfiguration();
+                        break;
+                    default:
+                        this.DrawNoteIndex();
+                        break;
+                }
+            }
+            catch (Exception ex)
             {
-                case UIState.NoteIndex:
-                    this.DrawNoteIndex();
-                    break;
-                case UIState.CategoryIndex:
-                    this.DrawCategoryIndex();
-                    break;
-                case UIState.NoteEdit:
-                    this.DrawNoteEditTool();
-                    break;
-                case UIState.CategoryEdit:
-                    this.DrawCategoryEditTool();
-                    break;
-                case UIState.ConfigurationEdit:
-                    this.DrawConfiguration();
-                    break;
-                default:
-                    this.DrawNoteIndex();
-                    break;
+                PluginLog.Error(ex, "Failed to draw the plugin window.");
+            }
+        }
+
+        public void DrawTitleButtons(bool undraw = false)
+        {
+            if (undraw)
+            {
+                this.TitleBarButtons.Clear();
+            }
+            else if (this.plugin?.Configuration?.ShowConfigurationButton ?? false)
+            {
+                this.TitleBarButtons = new()
+                {
+                    new TitleBarButton()
+                    {
+                        AvailableClickthrough = true,
+                        Icon = FontAwesomeIcon.Cog,
+                        Click = (msg) =>
+                        {
+                            this.plugin.WindowManager.SettingsWindow!.IsOpen ^= true;
+                        },
+                        IconOffset = new(2,1),
+                        ShowTooltip = () =>
+                        {
+                            ImGui.BeginTooltip();
+                            ImGui.Text("Open NeatNoter Settings");
+                            ImGui.EndTooltip();
+                        },
+                    },
+                };
             }
         }
 
@@ -225,21 +263,11 @@ namespace NeatNoter
                     ImGui.EndTabItem();
                 }
 
-                if (this.plugin.Configuration.ShowConfigurationTab)
-                {
-                    if (BeginTabItem(Loc.Localize("Configuration", "Config") + "###NeatNoter_TabItemButton_Configuration", this.configurationTabFlags))
-                    {
-                        this.SetState(UIState.ConfigurationEdit);
-                        ImGui.EndTabItem();
-                    }
-                }
-
                 ImGui.EndTabBar();
             }
 
             this.noteTabFlags = ImGuiTabItemFlags.None;
             this.categoryTabFlags = ImGuiTabItemFlags.None;
-            this.configurationTabFlags = ImGuiTabItemFlags.None;
         }
 
         private void DrawConfiguration()

@@ -1,13 +1,8 @@
-﻿using System;
+using System;
 using System.Reflection;
 using System.Timers;
-
-using Dalamud.DrunkenToad;
 using Dalamud.DrunkenToad.Extensions;
 using Dalamud.DrunkenToad.Helpers;
-using Dalamud.Game.ClientState;
-using Dalamud.Game.Command;
-using Dalamud.Game.Gui;
 using Dalamud.IoC;
 using Dalamud.Logging;
 using Dalamud.Plugin;

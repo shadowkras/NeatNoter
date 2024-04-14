@@ -104,8 +104,8 @@ namespace NeatNoter
         public bool ShowContentPreview { get; set; } = true;
 
         /// <summary>
-        /// Gets or sets a value indicating whether include the configuration tab on the main window.
+        /// Gets or sets a value indicating whether include the configuration button on the main window title.
         /// </summary>
-        public bool ShowConfigurationTab { get; set; } = true;
+        public bool ShowConfigurationButton { get; set; } = true;
     }
 }

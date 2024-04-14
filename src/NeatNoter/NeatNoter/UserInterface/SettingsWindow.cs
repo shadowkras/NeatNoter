@@ -67,10 +67,15 @@ namespace NeatNoter
 
         private void DrawDisplay()
         {
+            if (this.plugin is null)
+                return;
+
             if (this.DrawHideConfigurationConfirmationWindow(ref this.IsHideConfigurationConfirmationWindowVisible))
             {
-                this.plugin.Configuration.ShowConfigurationTab = false;
+                this.plugin.Configuration.ShowConfigurationButton = false;
                 this.plugin.SaveConfig();
+
+                this.plugin?.WindowManager?.NotebookWindow?.DrawTitleButtons(true);
             }
 
             ImGui.TextColored(ImGuiColors.DalamudViolet, Loc.Localize("Display", "Display"));
@@ -83,17 +88,20 @@ namespace NeatNoter
                     this.plugin.SaveConfig();
                 }
 
-                var showConfigurationTab = this.plugin.Configuration.ShowConfigurationTab;
-                if (ImGui.Checkbox(Loc.Localize("ShowConfigurationTab", "Show configuration tab"), ref showConfigurationTab))
+                var showConfigurationButton = this.plugin.Configuration.ShowConfigurationButton;
+                if (ImGui.Checkbox(Loc.Localize("ShowConfigurationButton", "Show configuration button"), ref showConfigurationButton))
                 {
-                    if (!showConfigurationTab)
+                    if (!showConfigurationButton)
                     {
                         this.IsHideConfigurationConfirmationWindowVisible = true;
+                        this.plugin?.SaveConfig();
                     }
                     else
                     {
-                        this.plugin.Configuration.ShowConfigurationTab = true;
-                        this.plugin.SaveConfig();
+                        this.plugin.Configuration.ShowConfigurationButton = true;
+                        this.plugin?.SaveConfig();
+
+                        this.plugin?.WindowManager?.NotebookWindow?.DrawTitleButtons();
                     }
                 }
 

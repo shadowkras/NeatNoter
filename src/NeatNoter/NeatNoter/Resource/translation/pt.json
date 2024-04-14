@@ -195,6 +195,10 @@
         "message": "Exibir prévia de conteúdo",
         "description": "SettingsWindow.DrawDisplay"
     },
+    "ShowConfigurationButton": {
+        "message": "Exibir botão de configuration",
+        "description": "SettingsWindow.DrawDisplay"
+    },
     "LockPosition": {
         "message": "Travar posição",
         "description": "SettingsWindow.DrawDisplay"
@@ -230,5 +234,17 @@
     "Browse": {
         "message": "Buscar",
         "description": "SettingsWindow.DrawBackup"
+    },
+    "HideConfigConfirmationHeader": {
+        "message": "NeatNoter Confirmação para Deletar",
+        "description": "NotebookWindow.DrawHideConfigurationConfirmationWindow"
+    },
+    "HideConfigConfirmationSubHeader": {
+        "message": "Você tem certeza que deseja esconder o botão de configuração?",
+        "description": "NotebookWindow.DrawHideConfigurationConfirmationWindow"
+    },
+    "HideConfigConfirmationInfo": {
+        "message": "Você pode acessa-lo mais tarde usando o comando /notebookconfig.",
+        "description": "NotebookWindow.DrawHideConfigurationConfirmationWindow"
     }
 }
