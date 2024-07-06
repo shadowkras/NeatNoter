@@ -141,12 +141,12 @@ public class NotebookService : BaseRepository
                 }
             }
 
-            PluginLog.Log($"Exported {notesToExport.Count} notes to {fullPath}.");
+            NeatNoterPlugin.PluginLog.Information($"Exported {notesToExport.Count} notes to {fullPath}.");
             return $"Exported {notesToExport.Count} notes to {fullPath}.";
         }
         catch (Exception ex)
         {
-            PluginLog.Error(ex, "Failed to export notes.");
+            NeatNoterPlugin.PluginLog.Error(ex, "Failed to export notes.");
             return "Failed to export notes: " + ex.Message;
         }
     }
@@ -198,7 +198,7 @@ public class NotebookService : BaseRepository
         }
         catch (Exception ex)
         {
-            PluginLog.Error(ex, "Failed to save notes.");
+            NeatNoterPlugin.PluginLog.Error(ex, "Failed to save notes.");
         }
 
         this.saveInProgress = false;

@@ -1,10 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
 using Dalamud.DrunkenToad.Helpers;
-using Dalamud.Logging;
 
 namespace NeatNoter;
 
@@ -32,7 +31,7 @@ public class BackupManager
         }
         catch (Exception ex)
         {
-            PluginLog.LogError(ex, "Failed to create backup.");
+            NeatNoterPlugin.PluginLog.Error(ex, "Failed to create backup.");
         }
     }
 
@@ -79,7 +78,7 @@ public class BackupManager
         }
         catch (Exception ex)
         {
-            PluginLog.LogError(ex, "Failed to delete backup.");
+            NeatNoterPlugin.PluginLog.Error(ex, "Failed to delete backup.");
         }
     }
 }

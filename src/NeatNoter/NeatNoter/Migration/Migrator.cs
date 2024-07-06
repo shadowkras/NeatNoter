@@ -5,6 +5,7 @@ using System.Linq;
 
 using Dalamud.DrunkenToad;
 using Dalamud.Logging;
+using Dalamud.Plugin;
 
 #pragma warning disable 618
 
@@ -29,8 +30,9 @@ namespace NeatNoter
                 {
                     // backup config file with embedded notes/categories
                     File.Copy(
-                        NeatNoterPlugin.PluginInterface.ConfigFile.ToString(),
+                        NeatNoterPlugin.PluginInterface.ConfigFile.FullName,
                         NeatNoterPlugin.PluginInterface.GetPluginConfigDirectory() + "/data/NeatNoter.json");
+
                     plugin.BackupManager.CreateBackup(
                         "upgrade/v" + plugin.Configuration.PluginVersion + "_");
 
@@ -87,7 +89,7 @@ namespace NeatNoter
             }
             catch (Exception ex)
             {
-                PluginLog.Error(ex, "Failed to migrate.");
+                NeatNoterPlugin.PluginLog.Error(ex, "Failed to migrate.");
                 return false;
             }
 

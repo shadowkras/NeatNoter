@@ -4,54 +4,57 @@
     "net8.0-windows7.0": {
       "CsvHelper": {
         "type": "Direct",
-        "requested": "[31.0.2, )",
-        "resolved": "31.0.2",
-        "contentHash": "ndlIN77XcFm6qqGlNPzl0XjVupMCBVhVSiO+1+X2UhJtnnvkx9f//7FOvlkLuEQ76NC3Y7owa8IOhgtKVa4H7Q=="
+        "requested": "[33.0.1, )",
+        "resolved": "33.0.1",
+        "contentHash": "fev4lynklAU2A9GVMLtwarkwaanjSYB4wUqO2nOJX5hnzObORzUqVLe+bDYCUyIIRQM4o5Bsq3CcyJR89iMmEQ=="
       },
       "Dalamud.DrunkenToad": {
         "type": "Direct",
-        "requested": "[1.7.2, )",
-        "resolved": "1.7.2",
-        "contentHash": "qAkd047H3vWtngB4QalK89Sd5SOZW3lz54MimLv490ojMs1slGDwJBjBjEJ49IQcdhEBo6wirvhwApcq6SUTxg==",
+        "requested": "[1.9.1, )",
+        "resolved": "1.9.1",
+        "contentHash": "5zdxW6elHRCP2G+4osdBrWe+8AyQrr6lFP/AlYYi1apuLSZAE9CK9/qCTm0NcFhAThfjNhYSRi4n9icOjDdu4w==",
         "dependencies": {
-          "Dalamud.Loc": "1.1.1",
+          "Dalamud.Loc": "1.1.2",
           "Microsoft.Extensions.DependencyInjection": "7.0.0"
         }
       },
       "DalamudPackager": {
         "type": "Direct",
-        "requested": "[2.1.12, )",
-        "resolved": "2.1.12",
-        "contentHash": "Sc0PVxvgg4NQjcI8n10/VfUQBAS4O+Fw2pZrAqBdRMbthYGeogzu5+xmIGCGmsEZ/ukMOBuAqiNiB5qA3MRalg=="
+        "requested": "[2.1.13, )",
+        "resolved": "2.1.13",
+        "contentHash": "rMN1omGe8536f4xLMvx9NwfvpAc9YFFfeXJ1t4P4PE6Gu8WCIoFliR1sh07hM+bfODmesk/dvMbji7vNI+B/pQ=="
       },
       "LiteDB": {
         "type": "Direct",
-        "requested": "[5.0.19, )",
-        "resolved": "5.0.19",
-        "contentHash": "O8XPBptE4SygW2SN6skqg/VDVTrjpJ0p6+i7Cp8x8razbu2ORLSd6ep3JdhDIdL6h57Bcxv2BuVaN70IKpXI0Q=="
+        "requested": "[5.0.21, )",
+        "resolved": "5.0.21",
+        "contentHash": "ykJ7ffFl7P9YQKR/PLci6zupiLrsSCNkOTiw6OtzntH7d2kCYp5L1+3a/pksKgTEHcJBoPXFtg7VZSGVBseN9w==",
+        "dependencies": {
+          "System.Buffers": "4.5.1"
+        }
       },
       "StyleCop.Analyzers": {
         "type": "Direct",
-        "requested": "[1.2.0-beta.435, )",
-        "resolved": "1.2.0-beta.435",
-        "contentHash": "TADk7vdGXtfTnYCV7GyleaaRTQjfoSfZXprQrVMm7cSJtJbFc1QIbWPyLvrgrfGdfHbGmUPvaN4ODKNxg2jgPQ==",
+        "requested": "[1.2.0-beta.556, )",
+        "resolved": "1.2.0-beta.556",
+        "contentHash": "llRPgmA1fhC0I0QyFLEcjvtM2239QzKr/tcnbsjArLMJxJlu0AA5G7Fft0OI30pHF3MW63Gf4aSSsjc5m82J1Q==",
         "dependencies": {
-          "StyleCop.Analyzers.Unstable": "1.2.0.435"
+          "StyleCop.Analyzers.Unstable": "1.2.0.556"
         }
       },
       "System.Drawing.Common": {
         "type": "Direct",
-        "requested": "[7.0.0-preview.7.22375.6, )",
-        "resolved": "7.0.0-preview.7.22375.6",
-        "contentHash": "qxDhUMQLSPSAQBkEfmEgZ2/xClxRMNqcYIlXT3toiVViRW7ombtCygbx8ka2+9Z/JADqfIbdO6uAx7E83+XPjQ==",
+        "requested": "[9.0.0-preview.5.24306.5, )",
+        "resolved": "9.0.0-preview.5.24306.5",
+        "contentHash": "tPnVBXlBlBFH0YL4uhhp6WphjJG+8XpH9SuDNUWbfdMJ6Hab9DUJFUg/fOnTFlAS3SWyGIFGJ4vx9VGbLIlz2w==",
         "dependencies": {
-          "Microsoft.Win32.SystemEvents": "7.0.0-preview.7.22375.6"
+          "Microsoft.Win32.SystemEvents": "9.0.0-preview.5.24306.7"
         }
       },
       "Dalamud.Loc": {
         "type": "Transitive",
-        "resolved": "1.1.1",
-        "contentHash": "fPVMmkiK2WaShXfLbl9ow8QTPxpJgcT92u+HqU5eNCskjwpwYWi3fkWMM1IIvPI/x9qCo2UIRUSDybeGVoE2/Q=="
+        "resolved": "1.1.2",
+        "contentHash": "Sy7ooP1+mGtoCCPltgUNATz3UbnRFihVcDfg9wB2rdsfY5FDfCW/k3jpLZiJZc3xXHyttzwttJeVC3tE3JsEGw=="
       },
       "Microsoft.Extensions.DependencyInjection": {
         "type": "Transitive",
@@ -68,13 +71,18 @@
       },
       "Microsoft.Win32.SystemEvents": {
         "type": "Transitive",
-        "resolved": "7.0.0-preview.7.22375.6",
-        "contentHash": "fU4W1hVc98LjTCHkZltriZq1gB7Ko5G6kYma2P3WRNz1M4oCHbrD9uBtLEonR+iy7747+ry5VK04PfpII3tAPg=="
+        "resolved": "9.0.0-preview.5.24306.7",
+        "contentHash": "L+eN7hSngC+kgPNy7jzKedIj8NXH6bdiKN+dwWJytfUhTMbzyLqKV/pA9lGSWWwLoDGbawncERrgcK0HnnOA/Q=="
       },
       "StyleCop.Analyzers.Unstable": {
         "type": "Transitive",
-        "resolved": "1.2.0.435",
-        "contentHash": "ouwPWZxbOV3SmCZxIRqHvljkSzkCyi1tDoMzQtDb/bRP8ctASV/iRJr+A2Gdj0QLaLmWnqTWDrH82/iP+X80Lg=="
+        "resolved": "1.2.0.556",
+        "contentHash": "zvn9Mqs/ox/83cpYPignI8hJEM2A93s2HkHs8HYMOAQW0PkampyoErAiIyKxgTLqbbad29HX/shv/6LGSjPJNQ=="
+      },
+      "System.Buffers": {
+        "type": "Transitive",
+        "resolved": "4.5.1",
+        "contentHash": "Rw7ijyl1qqRS0YQD/WycNst8hUUMgrMH4FCn1nNm27M4VxchZ1js3fVjQaANHO5f3sN4isvP4a+Met9Y4YomAg=="
       }
     }
   }

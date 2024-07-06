@@ -146,7 +146,7 @@ namespace NeatNoter
             }
             catch (Exception ex)
             {
-                PluginLog.Error(ex, "Failed to draw the plugin window.");
+                NeatNoterPlugin.PluginLog.Error(ex, "Failed to draw the plugin window.");
             }
         }
 

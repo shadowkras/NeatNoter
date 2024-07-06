@@ -40,8 +40,13 @@ namespace NeatNoter
         /// <summary>
         /// Initializes a new instance of the <see cref="NeatNoterPlugin"/> class.
         /// </summary>
-        public NeatNoterPlugin()
+        /// <param name="dalamudPluginInterface">Instance of IDalamudPluginInterface.</param>
+        /// <param name="pluginLog">Instance of IPluginLog.</param>
+        public NeatNoterPlugin(IDalamudPluginInterface dalamudPluginInterface, IPluginLog pluginLog)
         {
+            PluginInterface = dalamudPluginInterface;
+            PluginLog = pluginLog;
+
             // load config
             try
             {
@@ -66,7 +71,7 @@ namespace NeatNoter
             var pluginVersion = Assembly.GetExecutingAssembly().VersionNumber();
             if (this.Configuration.PluginVersion < pluginVersion)
             {
-                PluginLog.Log("Running backup since new version detected.");
+                PluginLog.Warning("Running backup since new version detected.");
                 this.RunUpgradeBackup();
                 this.Configuration.PluginVersion = pluginVersion;
                 this.SaveConfig();
@@ -93,28 +98,30 @@ namespace NeatNoter
         /// Gets pluginInterface.
         /// </summary>
         [PluginService]
-        [RequiredVersion("1.0")]
-        public static DalamudPluginInterface PluginInterface { get; private set; } = null!;
+        public static IDalamudPluginInterface PluginInterface { get; private set; } = null!;
+
+        /// <summary>
+        /// Gets pluginInterface.
+        /// </summary>
+        [PluginService]
+        public static IPluginLog PluginLog { get; private set; } = null!;
 
         /// <summary>
         /// Gets chat gui.
         /// </summary>
         [PluginService]
-        [RequiredVersion("1.0")]
         public static IChatGui Chat { get; private set; } = null!;
 
         /// <summary>
         /// Gets command manager.
         /// </summary>
         [PluginService]
-        [RequiredVersion("1.0")]
         public static ICommandManager CommandManager { get; private set; } = null!;
 
         /// <summary>
         /// Gets client state.
         /// </summary>
         [PluginService]
-        [RequiredVersion("1.0")]
         public static IClientState ClientState { get; private set; } = null!;
 
         /// <summary>
@@ -187,7 +194,7 @@ namespace NeatNoter
         {
             if (UnixTimestampHelper.CurrentTime() > this.Configuration.LastBackup + this.Configuration.BackupFrequency)
             {
-                PluginLog.Log("Running backup due to frequency timer.");
+                PluginLog.Warning("Running backup due to frequency timer.");
                 this.Configuration.LastBackup = UnixTimestampHelper.CurrentTime();
                 this.BackupManager.CreateBackup();
                 this.BackupManager.DeleteBackups(this.Configuration.BackupRetention);
