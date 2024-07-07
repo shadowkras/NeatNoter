@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Dalamud.NET.Sdk/9.0.2">
 	<PropertyGroup>
 		<Version>2.6.0</Version>
 		<Title>NeatNoter</Title>
