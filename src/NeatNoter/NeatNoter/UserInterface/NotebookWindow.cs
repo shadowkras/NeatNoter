@@ -761,11 +761,11 @@ namespace NeatNoter
                 this.transparencyWindowVisible = false;
             }
 
-            if (this.plugin?.WindowManager?.NoteOverlayWindow?.CurrentNote != this.CurrentNote && ImGui.Selectable(Loc.Localize("ShowEditorTransparencySlider", "Set as note overlay")))
+            if (this.plugin?.WindowManager?.NoteOverlayWindow?.CurrentNote != this.CurrentNote && ImGui.Selectable(Loc.Localize("SetNoteOverlay", "Set as note overlay")))
             {
                 this.SetNoteOverlay(this.CurrentNote);
             }
-            else if (this.transparencyWindowVisible && ImGui.Selectable(Loc.Localize("HideEditorTransparencySlider", "Remove as note overlay")))
+            else if (this.transparencyWindowVisible && ImGui.Selectable(Loc.Localize("RemoveNoteOverlay", "Remove as note overlay")))
             {
                 this.SetNoteOverlay(null);
             }

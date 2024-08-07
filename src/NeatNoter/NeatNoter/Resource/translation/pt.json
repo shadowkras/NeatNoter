@@ -250,5 +250,13 @@
     "EditorPerformanceLoss": {
         "message": "Aviso, pode ocorrer uma perda de performance quando a nota possuir mais de 2048 caracteres.",
         "description": "NotebookWindow.EditorPerformanceLoss"
+    },
+    "SetNoteOverlay": {
+        "message": "Usar como Nota com overlay.",
+        "description": "NoteOverlayWindow.NoteOverlay"
+    },
+    "RemoveNoteOverlay": {
+        "message": "Remover como Nota com overlay.",
+        "description": "NoteOverlayWindow.NoteOverlay"
     }
 }

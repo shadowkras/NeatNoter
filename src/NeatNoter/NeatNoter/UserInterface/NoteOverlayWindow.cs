@@ -52,7 +52,7 @@ namespace NeatNoter.NeatNoter.UserInterface
 
                     if (ImGui.BeginPopupContextItem("###NeatNoter_" + this.CurrentNote.IdentifierString))
                     {
-                        if (ImGui.Selectable(Loc.Localize("UseNoteOverlay", "Remove Note Overlay")))
+                        if (ImGui.Selectable(Loc.Localize("RemoveNoteOverlay", "Remove as Note Overlay")))
                         {
                             this.CurrentNote = null;
                         }
