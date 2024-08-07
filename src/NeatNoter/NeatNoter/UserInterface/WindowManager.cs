@@ -1,4 +1,5 @@
 using Dalamud.Interface.Windowing;
+using NeatNoter.NeatNoter.UserInterface;
 
 namespace NeatNoter
 {
@@ -15,11 +16,13 @@ namespace NeatNoter
         {
             // create windows
             this.NotebookWindow = new NotebookWindow(plugin);
+            this.NoteOverlayWindow = new NoteOverlayWindow(plugin);
             this.SettingsWindow = new SettingsWindow(plugin);
 
             // setup window system
             this.WindowSystem = new WindowSystem("NeatNoterWindowSystem");
             this.WindowSystem.AddWindow(this.NotebookWindow);
+            this.WindowSystem.AddWindow(this.NoteOverlayWindow);
             this.WindowSystem.AddWindow(this.SettingsWindow);
             this.NotebookWindow.IsOpen = plugin.Configuration.IsVisible;
 
@@ -32,6 +35,11 @@ namespace NeatNoter
         /// Gets main NeatNoter window.
         /// </summary>
         public NotebookWindow? NotebookWindow { get; }
+
+        /// <summary>
+        /// Gets NeatNoter overlay window.
+        /// </summary>
+        public NoteOverlayWindow? NoteOverlayWindow { get; }
 
         /// <summary>
         /// Gets config NeatNoter window.
