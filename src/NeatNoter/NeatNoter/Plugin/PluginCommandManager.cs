@@ -21,6 +21,11 @@ namespace NeatNoter
                 HelpMessage = "Open/close the NeatNoter notebook.",
                 ShowInHelp = true,
             });
+            NeatNoterPlugin.CommandManager.AddHandler("/noteoverlay", new CommandInfo(this.ToggleOverlay)
+            {
+                HelpMessage = "Open/close the NeatNoter note overlay.",
+                ShowInHelp = true,
+            });
             NeatNoterPlugin.CommandManager.AddHandler("/notebookconfig", new CommandInfo(this.ToggleSettings)
             {
                 HelpMessage = "Open/close the NeatNoter settings.",
@@ -34,6 +39,7 @@ namespace NeatNoter
         public void Dispose()
         {
             NeatNoterPlugin.CommandManager.RemoveHandler("/notebook");
+            NeatNoterPlugin.CommandManager.RemoveHandler("/noteoverlay");
             NeatNoterPlugin.CommandManager.RemoveHandler("/notebookconfig");
         }
 
@@ -50,6 +56,11 @@ namespace NeatNoter
         private void ToggleSettings(string command, string arguments)
         {
             this.plugin.WindowManager.SettingsWindow?.Toggle();
+        }
+
+        private void ToggleOverlay(string command, string arguments)
+        {
+            this.plugin.WindowManager.NoteOverlayWindow?.Toggle();
         }
     }
 }

@@ -8,6 +8,7 @@ using CheapLoc;
 using Dalamud.DrunkenToad.Helpers;
 using Dalamud.Interface;
 using Dalamud.Interface.Colors;
+using Dalamud.Interface.Components;
 using Dalamud.Interface.Utility;
 using Dalamud.Logging;
 using ImGuiNET;
@@ -36,6 +37,7 @@ namespace NeatNoter
 
         private const int MaxNoteSize = 1024 * 4196; // You can fit the complete works of Shakespeare in 3.5MB, so this is probably fine.
         private static readonly uint TextColor = ImGui.GetColorU32(ImGuiCol.Text);
+        private static readonly ushort MaxSafeWordLenght = 2048;
 
         private SettingsWindow settingsWindow;
 
@@ -54,6 +56,8 @@ namespace NeatNoter
         private string previousNote;
         private ImGuiTabItemFlags noteTabFlags;
         private ImGuiTabItemFlags categoryTabFlags;
+
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NotebookWindow"/> class.
@@ -448,8 +452,7 @@ namespace NeatNoter
             {
                 if (ImGui.Button(Loc.Localize("Back", "Back")))
                 {
-                    this.SetState(this
-                        .lastState); // We won't have menus more then one-deep, so we don't need to set up a push-down
+                    this.SetState(this.lastState); // We won't have menus more then one-deep, so we don't need to set up a push-down
                 }
 
                 ImGui.SameLine();
@@ -540,6 +543,11 @@ namespace NeatNoter
                 {
                     this.CurrentNote = note;
                     this.deletionWindowVisible = true;
+                }
+
+                if (ImGui.Selectable(Loc.Localize("UseNoteOverlay", "Use as Note Overlay")))
+                {
+                    this.SetNoteOverlay(note);
                 }
 
                 ImGui.EndPopup();
@@ -653,12 +661,13 @@ namespace NeatNoter
 
         private void DrawDocumentEditor(UniqueDocument? document)
         {
-            if (this.transparencyWindowVisible) this.DrawTransparencySlider(ImGui.GetWindowPos(), ImGui.GetWindowSize());
+            if (this.transparencyWindowVisible)
+                this.DrawTransparencySlider(ImGui.GetWindowPos(), ImGui.GetWindowSize());
 
             if (!this.minimalView)
             {
                 var title = document?.Name;
-                if (ImGui.InputText(document?.GetTypeName() + " " + Loc.Localize("Title", "Title"), ref title, 128))
+                if (ImGui.InputText(document?.GetTypeName() + " " + Loc.Localize("Title", "Title"), ref title, 128, ImGuiInputTextFlags.ReadOnly))
                 {
                     document!.Name = title;
                     document.Modified = UnixTimestampHelper.CurrentTime();
@@ -687,7 +696,7 @@ namespace NeatNoter
 
             if (!this.textEditable) ImGui.GetIO().WantTextInput = false;
 
-            if (ImGui.InputTextMultiline(string.Empty, ref body, MaxNoteSize, new Vector2(ElementSizeX - (16 * ImGui.GetIO().FontGlobalScale), WindowSizeY - (this.minimalView ? 40 : 94)), inputFlags))
+            if (ImGui.InputTextMultiline(string.Empty, ref body, MaxNoteSize, new Vector2(ElementSizeX - (16 * ImGui.GetIO().FontGlobalScale), WindowSizeY - (this.minimalView ? 40 : 94) - 25), inputFlags))
             {
                 if (document != null)
                 {
@@ -696,6 +705,10 @@ namespace NeatNoter
                     this.IsNoteDirty = true;
                 }
             }
+
+            ImGui.Text($"{document?.WordCount}/{MaxSafeWordLenght}");
+            if (document?.WordCount > MaxSafeWordLenght)
+                ImGuiComponents.HelpMarker(Loc.Localize("EditorPerformanceLoss", "Warning, performance loss can occur when a note is more than 2048 characters."));
 
             if (ImGui.IsItemDeactivated() && ImGui.IsKeyPressed(ImGuiKey.Escape))
             {
@@ -746,6 +759,15 @@ namespace NeatNoter
             else if (this.transparencyWindowVisible && ImGui.Selectable(Loc.Localize("HideEditorTransparencySlider", "Hide editor transparency slider")))
             {
                 this.transparencyWindowVisible = false;
+            }
+
+            if (this.plugin?.WindowManager?.NoteOverlayWindow?.CurrentNote != this.CurrentNote && ImGui.Selectable(Loc.Localize("ShowEditorTransparencySlider", "Set as note overlay")))
+            {
+                this.SetNoteOverlay(this.CurrentNote);
+            }
+            else if (this.transparencyWindowVisible && ImGui.Selectable(Loc.Localize("HideEditorTransparencySlider", "Remove as note overlay")))
+            {
+                this.SetNoteOverlay(null);
             }
 
             ImGui.EndPopup();
@@ -816,6 +838,19 @@ namespace NeatNoter
             ImGui.Text(this.exportResult);
 
             return;
+        }
+
+        private void SetNoteOverlay(Note? note)
+        {
+            if (this.plugin.WindowManager.NoteOverlayWindow != null)
+            {
+                this.plugin.WindowManager.NoteOverlayWindow.CurrentNote = note;
+
+                if (note is not null && !this.plugin.WindowManager.NoteOverlayWindow.IsOpen)
+                    this.plugin.WindowManager.NoteOverlayWindow.Toggle();
+                else if (note is null && this.plugin.WindowManager.NoteOverlayWindow.IsOpen)
+                    this.plugin.WindowManager.NoteOverlayWindow.Toggle();
+            }
         }
     }
 }
