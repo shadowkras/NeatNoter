@@ -246,5 +246,9 @@
     "HideConfigConfirmationInfo": {
         "message": "Você pode acessa-lo mais tarde usando o comando /notebookconfig.",
         "description": "NotebookWindow.DrawHideConfigurationConfirmationWindow"
+    },
+    "EditorPerformanceLoss": {
+        "message": "Aviso, pode ocorrer uma perda de performance quando a nota possuir mais de 2048 caracteres.",
+        "description": "NotebookWindow.EditorPerformanceLoss"
     }
 }

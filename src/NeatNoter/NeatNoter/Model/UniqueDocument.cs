@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.IO.Compression;
 using System.Text;
@@ -71,6 +71,13 @@ namespace NeatNoter
         /// Gets or sets last modified date (unix timestamp).
         /// </summary>
         public long Modified { get; set; }
+
+        /// <summary>
+        /// Gets the current lenght of the body.
+        /// </summary>
+        [BsonIgnore]
+        [JsonIgnore]
+        public ushort WordCount => (ushort)this.Body.Length;
 
         /// <summary>
         /// Compress string.
