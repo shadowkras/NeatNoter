@@ -667,7 +667,7 @@ namespace NeatNoter
             if (!this.minimalView)
             {
                 var title = document?.Name;
-                if (ImGui.InputText(document?.GetTypeName() + " " + Loc.Localize("Title", "Title"), ref title, 128, ImGuiInputTextFlags.ReadOnly))
+                if (ImGui.InputText(document?.GetTypeName() + " " + Loc.Localize("Title", "Title"), ref title, 128))
                 {
                     document!.Name = title;
                     document.Modified = UnixTimestampHelper.CurrentTime();
