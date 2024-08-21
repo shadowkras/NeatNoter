@@ -199,6 +199,14 @@
         "message": "Exibir botão de configuration",
         "description": "SettingsWindow.DrawDisplay"
     },
+    "OverlayFontScale": {
+        "message": "Escala da fonte do overlay",
+        "description": "SettingsWindow.Overlay"
+    },
+    "OverlayFontColor": {
+        "message": "Cor da fonte do overlay",
+        "description": "SettingsWindow.Overlay"
+    },
     "LockPosition": {
         "message": "Travar posição",
         "description": "SettingsWindow.DrawDisplay"

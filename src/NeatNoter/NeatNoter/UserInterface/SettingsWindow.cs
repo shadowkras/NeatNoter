@@ -24,7 +24,7 @@ namespace NeatNoter
         {
             this.plugin = plugin;
             this.RespectCloseHotkey = true;
-            this.Size = new Vector2(300f, 400f);
+            this.Size = new Vector2(300f, 540f);
             this.SizeCondition = ImGuiCond.Appearing;
             this.IsHideConfigurationConfirmationWindowVisible = false;
         }
@@ -35,6 +35,7 @@ namespace NeatNoter
             this.SaveFrequency();
             this.DrawDisplay();
             this.DrawSearch();
+            this.DrawOverlay();
         }
 
         private void SaveFrequency()
@@ -133,6 +134,36 @@ namespace NeatNoter
                 if (ImGui.Checkbox(Loc.Localize("IncludeNoteContents", "Include note contents"), ref includeBodies))
                 {
                     this.plugin.Configuration.IncludeNoteBodiesInSearch = includeBodies;
+                    this.plugin.SaveConfig();
+                }
+            }
+
+            ImGui.EndChild();
+            ImGui.Spacing();
+        }
+
+        private void DrawOverlay()
+        {
+            ImGui.TextColored(ImGuiColors.DalamudViolet, Loc.Localize("Overlay", "Overlay"));
+            ImGui.BeginChild("###Overlay", new Vector2(-1, 110f), true);
+            {
+                ImGui.Text(Loc.Localize("OverlayFontScale", "Overlay Window Font Scale"));
+                var overlayScale = this.plugin.Configuration.OverlayWindowFontScale;
+                if (ImGui.SliderFloat("###NeatNoter_OverlayFontScale_Slider", ref overlayScale, 0.5f, 2.0f))
+                {
+                    this.plugin.Configuration.OverlayWindowFontScale = overlayScale;
+                    this.plugin.SaveConfig();
+                }
+
+                var overlayColor = this.plugin.Configuration.OverlayWindowFontColor;
+
+                ImGui.NewLine();
+                ImGui.Text(Loc.Localize("OverlayFontColor", "Overlay Window Font Color"));
+                ImGui.SameLine();
+
+                if (ImGui.ColorEdit4("##colfb", ref overlayColor, ImGuiColorEditFlags.NoInputs))
+                {
+                    this.plugin.Configuration.OverlayWindowFontColor = overlayColor;
                     this.plugin.SaveConfig();
                 }
             }

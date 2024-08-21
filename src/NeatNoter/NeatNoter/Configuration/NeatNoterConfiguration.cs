@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-
+using System.Numerics;
 using Dalamud.Configuration;
 
 namespace NeatNoter
@@ -107,5 +107,9 @@ namespace NeatNoter
         /// Gets or sets a value indicating whether include the configuration button on the main window title.
         /// </summary>
         public bool ShowConfigurationButton { get; set; } = true;
+
+        public float OverlayWindowFontScale { get; set; } = 1.0f;
+
+        public Vector4 OverlayWindowFontColor { get; set; } = new Vector4(0, 255, 0, 255);
     }
 }

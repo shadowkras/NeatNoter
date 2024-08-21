@@ -1,7 +1,10 @@
 using System;
+using System.Drawing;
 using CheapLoc;
+using Dalamud.Interface;
 using FFXIVClientStructs.FFXIV.Common.Math;
 using ImGuiNET;
+using Lumina.Data;
 
 namespace NeatNoter.NeatNoter.UserInterface
 {
@@ -47,8 +50,15 @@ namespace NeatNoter.NeatNoter.UserInterface
             {
                 if (this.CurrentNote != null)
                 {
+                    ImGui.PushStyleColor(ImGuiCol.Text, this.plugin.Configuration.OverlayWindowFontColor);
+
+                    var fontScale = ImGui.GetFontSize();
+                    ImGui.SetWindowFontScale(this.plugin.Configuration.OverlayWindowFontScale);
+
                     ImGui.Text(this.CurrentNote.Name);
                     ImGui.Text(this.CurrentNote.Body);
+                    ImGui.PopStyleColor();
+                    ImGui.SetWindowFontScale(fontScale);
 
                     if (ImGui.BeginPopupContextItem("###NeatNoter_" + this.CurrentNote.IdentifierString))
                     {
