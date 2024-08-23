@@ -1,10 +1,8 @@
 using System;
-using System.Drawing;
 using CheapLoc;
-using Dalamud.Interface;
+using Dalamud.Interface.Utility.Raii;
 using FFXIVClientStructs.FFXIV.Common.Math;
 using ImGuiNET;
-using Lumina.Data;
 
 namespace NeatNoter.NeatNoter.UserInterface
 {
@@ -14,8 +12,6 @@ namespace NeatNoter.NeatNoter.UserInterface
         /// Currently selected note.
         /// </summary>
         public Note? CurrentNote;
-
-        private static readonly uint TextColor = ImGui.GetColorU32(ImGuiCol.Text);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NoteOverlayWindow"/> class.
@@ -50,21 +46,18 @@ namespace NeatNoter.NeatNoter.UserInterface
             {
                 if (this.CurrentNote != null)
                 {
-                    ImGui.PushStyleColor(ImGuiCol.Text, this.plugin.Configuration.OverlayWindowFontColor);
-
-                    var fontScale = ImGui.GetFontSize();
-                    ImGui.SetWindowFontScale(this.plugin.Configuration.OverlayWindowFontScale);
-
-                    ImGui.Text(this.CurrentNote.Name);
-                    ImGui.Text(this.CurrentNote.Body);
-                    ImGui.PopStyleColor();
-                    ImGui.SetWindowFontScale(fontScale);
-
-                    if (ImGui.BeginPopupContextItem("###NeatNoter_" + this.CurrentNote.IdentifierString))
+                    using (var window = ImRaii.Popup("#overlay"))
                     {
-                        if (ImGui.Selectable(Loc.Localize("RemoveNoteOverlay", "Remove as Note Overlay")))
+                        ImGui.SetWindowFontScale(this.plugin.Configuration.OverlayWindowFontScale);
+                        ImGui.TextColored(this.plugin.Configuration.OverlayWindowFontColor, this.CurrentNote.Name + Environment.NewLine + this.CurrentNote.Body);
+                        ImGui.SetWindowFontScale(1.0f);
+
+                        if (ImGui.BeginPopupContextItem("###NeatNoter_" + this.CurrentNote.IdentifierString, ImGuiPopupFlags.MouseButtonRight))
                         {
-                            this.CurrentNote = null;
+                            if (ImGui.Selectable(Loc.Localize("RemoveNoteOverlay", "Remove as Note Overlay")))
+                            {
+                                this.CurrentNote = null;
+                            }
                         }
                     }
                 }
