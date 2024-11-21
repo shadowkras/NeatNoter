@@ -25,8 +25,7 @@ namespace NeatNoter
             this.WindowSystem.AddWindow(this.NoteOverlayWindow);
             this.WindowSystem.AddWindow(this.SettingsWindow);
             this.NotebookWindow.IsOpen = plugin.Configuration.IsVisible;
-
-            // add event listeners
+            NeatNoterPlugin.PluginInterface.UiBuilder.OpenMainUi += this.DrawMainUi;
             NeatNoterPlugin.PluginInterface.UiBuilder.Draw += this.Draw;
             NeatNoterPlugin.PluginInterface.UiBuilder.OpenConfigUi += this.OpenConfigUi;
         }
@@ -53,9 +52,19 @@ namespace NeatNoter
         /// </summary>
         public void Dispose()
         {
+            NeatNoterPlugin.PluginInterface.UiBuilder.OpenMainUi -= this.DrawMainUi;
             NeatNoterPlugin.PluginInterface.UiBuilder.Draw -= this.Draw;
             NeatNoterPlugin.PluginInterface.UiBuilder.OpenConfigUi -= this.OpenConfigUi;
             this.WindowSystem.RemoveAllWindows();
+        }
+
+        private void DrawMainUi()
+        {
+            // only show when logged in
+            if (!NeatNoterPlugin.ClientState.IsLoggedIn) return;
+
+            if (this.NotebookWindow is not null)
+                this.NotebookWindow.IsOpen = true;
         }
 
         private void Draw()

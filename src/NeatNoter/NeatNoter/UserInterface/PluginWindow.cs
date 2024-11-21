@@ -23,6 +23,7 @@ namespace NeatNoter
         protected PluginWindow(NeatNoterPlugin plugin, string windowName, ImGuiWindowFlags flags = ImGuiWindowFlags.None)
             : base(windowName, flags)
         {
+
             this.plugin = plugin;
             this.RespectCloseHotkey = false;
         }
