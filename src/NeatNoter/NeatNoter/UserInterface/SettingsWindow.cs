@@ -14,6 +14,7 @@ namespace NeatNoter
     public class SettingsWindow : PluginWindow
     {
         public bool IsHideConfigurationConfirmationWindowVisible;
+        public bool IsShowOverlayPositionConfirmationWindowVisible;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SettingsWindow"/> class.
@@ -24,9 +25,10 @@ namespace NeatNoter
         {
             this.plugin = plugin;
             this.RespectCloseHotkey = true;
-            this.Size = new Vector2(300f, 540f);
+            this.Size = new Vector2(300f, 560f);
             this.SizeCondition = ImGuiCond.Appearing;
             this.IsHideConfigurationConfirmationWindowVisible = false;
+            this.IsShowOverlayPositionConfirmationWindowVisible = false;
         }
 
         /// <inheritdoc/>
@@ -145,7 +147,7 @@ namespace NeatNoter
         private void DrawOverlay()
         {
             ImGui.TextColored(ImGuiColors.DalamudViolet, Loc.Localize("Overlay", "Overlay"));
-            ImGui.BeginChild("###Overlay", new Vector2(-1, 110f), true);
+            ImGui.BeginChild("###Overlay", new Vector2(-1, 120f), true);
             {
                 ImGui.Text(Loc.Localize("OverlayFontScale", "Overlay Window Font Scale"));
                 var overlayScale = this.plugin.Configuration.OverlayWindowFontScale;
@@ -157,7 +159,6 @@ namespace NeatNoter
 
                 var overlayColor = this.plugin.Configuration.OverlayWindowFontColor;
 
-                ImGui.NewLine();
                 ImGui.Text(Loc.Localize("OverlayFontColor", "Overlay Window Font Color"));
                 ImGui.SameLine();
 
@@ -165,6 +166,16 @@ namespace NeatNoter
                 {
                     this.plugin.Configuration.OverlayWindowFontColor = overlayColor;
                     this.plugin.SaveConfig();
+                }
+
+                if (ImGui.Button(Loc.Localize("ResetOverlayPosition", "Reset") + "###NeatNoter_Reset_Overlay_Position"))
+                {
+                    this.IsShowOverlayPositionConfirmationWindowVisible = true;
+                }
+
+                if (this.DrawOverlayResetConfirmationWindow(ref this.IsShowOverlayPositionConfirmationWindowVisible))
+                {
+                    this.plugin.WindowManager.NoteOverlayWindow?.ResetPosition();
                 }
             }
 
@@ -184,6 +195,34 @@ namespace NeatNoter
 
             ImGui.Text(Loc.Localize("HideConfigConfirmationSubHeader", "Are you sure you want to hide the configuration tab?"));
             ImGui.Text(Loc.Localize("HideConfigConfirmationInfo", "You can access it using /notebookconf command later."));
+            if (ImGui.Button(Loc.Localize("Yes", "Yes")))
+            {
+                isVisible = false;
+                ret = true;
+            }
+
+            ImGui.SameLine();
+            if (ImGui.Button(Loc.Localize("No", "No")))
+            {
+                isVisible = false;
+            }
+
+            ImGui.End();
+
+            return ret;
+        }
+
+        private bool DrawOverlayResetConfirmationWindow(ref bool isVisible)
+        {
+            if (!isVisible)
+                return false;
+
+            var ret = false;
+
+            ImGui.SetNextWindowSize(ImGuiHelpers.ScaledVector2(280f, 120f));
+            ImGui.Begin(Loc.Localize("OverlayResetConfirmationHeader", "NeatNoter Overlay Reset Confirmation"), ImGuiWindowFlags.NoResize);
+
+            ImGui.Text(Loc.Localize("OverlayResetConfirmationSubHeader", "Are you sure you want to reset the overlay position?"));
             if (ImGui.Button(Loc.Localize("Yes", "Yes")))
             {
                 isVisible = false;
