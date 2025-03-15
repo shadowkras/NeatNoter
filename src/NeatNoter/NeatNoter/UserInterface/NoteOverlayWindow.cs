@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using CheapLoc;
 using Dalamud.Interface.Utility.Raii;
 using FFXIVClientStructs.FFXIV.Common.Math;
@@ -24,6 +25,7 @@ namespace NeatNoter.NeatNoter.UserInterface
             this.Size = new Vector2(400, 600) * ImGui.GetIO().FontGlobalScale;
             this.SizeCondition = ImGuiCond.FirstUseEver;
             this.Flags = ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoTitleBar;
+            this.Position = null;
         }
 
         /// <inheritdoc />
@@ -42,6 +44,8 @@ namespace NeatNoter.NeatNoter.UserInterface
         /// <inheritdoc/>
         public override void Draw()
         {
+            this.Position = null;
+
             try
             {
                 if (this.CurrentNote != null)
@@ -66,6 +70,11 @@ namespace NeatNoter.NeatNoter.UserInterface
             {
                 NeatNoterPlugin.PluginLog.Error(ex, "Failed to draw the overlay window.");
             }
+        }
+
+        public void ResetPosition()
+        {
+            this.Position = new System.Numerics.Vector2(0, 0);
         }
     }
 }

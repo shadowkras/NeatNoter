@@ -3,7 +3,7 @@
 		<Version>2.7.0</Version>
 		<Title>NeatNoter</Title>
 		<Authors>kalilistic, karashiiro, shadowkras</Authors>
-		<TargetFramework>net8.0-windows</TargetFramework>
+		<TargetFramework>net9.0-windows</TargetFramework>
 		<Platforms>x64</Platforms>
 		<LangVersion>latest</LangVersion>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
