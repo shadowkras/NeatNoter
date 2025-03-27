@@ -219,7 +219,7 @@ namespace NeatNoter
 
             var ret = false;
 
-            ImGui.SetNextWindowSize(ImGuiHelpers.ScaledVector2(280f, 120f));
+            ImGui.SetNextWindowSize(ImGuiHelpers.ScaledVector2(310f, 120f));
             ImGui.Begin(Loc.Localize("OverlayResetConfirmationHeader", "NeatNoter Overlay Reset Confirmation"), ImGuiWindowFlags.NoResize);
 
             ImGui.Text(Loc.Localize("OverlayResetConfirmationSubHeader", "Are you sure you want to reset the overlay position?"));
