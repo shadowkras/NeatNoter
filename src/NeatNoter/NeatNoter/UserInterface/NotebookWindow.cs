@@ -11,7 +11,7 @@ using Dalamud.Interface.Colors;
 using Dalamud.Interface.Components;
 using Dalamud.Interface.Utility;
 using Dalamud.Logging;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 
 namespace NeatNoter
 {
@@ -224,7 +224,7 @@ namespace NeatNoter
 
             labelBytes[unterminatedLabelBytes.Length] = 0;
 
-            var num2 = (int)ImGuiNative.igBeginTabItem(labelBytes, null, flags);
+            var num2 = (int)ImGuiNative.BeginTabItem(labelBytes, null, flags);
             return (uint)num2 > 0U;
         }
 

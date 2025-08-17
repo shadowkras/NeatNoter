@@ -1,6 +1,6 @@
-﻿<Project Sdk="Dalamud.NET.Sdk/12.0.2">
+﻿<Project Sdk="Dalamud.NET.Sdk/13.0.0">
 	<PropertyGroup>
-		<Version>2.7.2</Version>
+		<Version>2.7.3</Version>
 		<Title>NeatNoter</Title>
 		<Authors>kalilistic, karashiiro, shadowkras</Authors>
 		<TargetFramework>net9.0-windows</TargetFramework>
@@ -68,14 +68,6 @@
 			<HintPath>$(DalamudLibPath)FFXIVClientStructs.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
-		<Reference Include="ImGui.NET">
-			<HintPath>$(DalamudLibPath)ImGui.NET.dll</HintPath>
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="ImGuiScene">
-			<HintPath>$(DalamudLibPath)ImGuiScene.dll</HintPath>
-			<Private>False</Private>
-		</Reference>
 		<Reference Include="Lumina">
 			<HintPath>$(DalamudLibPath)Lumina.dll</HintPath>
 			<Private>False</Private>
@@ -84,25 +76,21 @@
 			<HintPath>$(DalamudLibPath)Lumina.Excel.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
-		<Reference Include="ImGui.NET">
-			<HintPath>$(DalamudLibPath)ImGui.NET.dll</HintPath>
-			<Private>False</Private>
-		</Reference>
 		<Reference Include="Newtonsoft.Json">
 			<HintPath>$(DalamudLibPath)Newtonsoft.Json.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="CsvHelper" Version="33.0.1" />
-		<PackageReference Include="DalamudPackager" Version="12.0.0" />
+		<PackageReference Include="CsvHelper" Version="33.1.0" />
+		<PackageReference Include="DalamudPackager" Version="13.0.0" />
 		<PackageReference Include="Dalamud.DrunkenToad" Version="1.9.1" />
 		<PackageReference Include="LiteDB" Version="5.0.21" />
 		<PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.556">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="System.Drawing.Common" Version="9.0.3" />
+		<PackageReference Include="System.Drawing.Common" Version="9.0.8" />
 	</ItemGroup>
 	<ItemGroup>
 		<Folder Include="NeatNoter\Resource\translation" />

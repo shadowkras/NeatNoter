@@ -1,9 +1,9 @@
 using System;
-using System.Threading;
+
 using CheapLoc;
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Utility.Raii;
 using FFXIVClientStructs.FFXIV.Common.Math;
-using ImGuiNET;
 
 namespace NeatNoter.NeatNoter.UserInterface
 {

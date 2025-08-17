@@ -4,7 +4,7 @@ using CheapLoc;
 using Dalamud.DrunkenToad.Extensions;
 using Dalamud.Interface.Colors;
 using Dalamud.Interface.Utility;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 
 namespace NeatNoter
 {
