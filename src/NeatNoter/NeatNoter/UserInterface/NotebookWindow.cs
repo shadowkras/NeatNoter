@@ -545,7 +545,11 @@ namespace NeatNoter
                     this.deletionWindowVisible = true;
                 }
 
-                if (ImGui.Selectable(Loc.Localize("UseNoteOverlay", "Use as Note Overlay")))
+                if (this.IsNoteOverlay(note) && ImGui.Selectable(Loc.Localize("RemoveNoteOverlay", "Remove as note overlay")))
+                {
+                    this.SetNoteOverlay(null);
+                }
+                else if (!this.IsNoteOverlay(note) && ImGui.Selectable(Loc.Localize("UseNoteOverlay", "Use as Note Overlay")))
                 {
                     this.SetNoteOverlay(note);
                 }
@@ -765,7 +769,7 @@ namespace NeatNoter
             {
                 this.SetNoteOverlay(this.CurrentNote);
             }
-            else if (this.transparencyWindowVisible && ImGui.Selectable(Loc.Localize("RemoveNoteOverlay", "Remove as note overlay")))
+            else if (this.IsNoteOverlay(this.CurrentNote) && ImGui.Selectable(Loc.Localize("RemoveNoteOverlay", "Remove as note overlay")))
             {
                 this.SetNoteOverlay(null);
             }
@@ -851,6 +855,17 @@ namespace NeatNoter
                 else if (note is null && this.plugin.WindowManager.NoteOverlayWindow.IsOpen)
                     this.plugin.WindowManager.NoteOverlayWindow.Toggle();
             }
+        }
+
+        private bool IsNoteOverlay(Note? note)
+        {
+            if (this.plugin.WindowManager.NoteOverlayWindow != null)
+            {
+                if (note is not null && this.plugin.WindowManager.NoteOverlayWindow.CurrentNote == note)
+                    return true;
+            }
+
+            return false;
         }
     }
 }
