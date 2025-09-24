@@ -496,8 +496,8 @@ namespace NeatNoter
             var windowPos = ImGui.GetWindowPos();
 
             var color = note.Categories.Count > 0
-                ? new Vector4(note.Categories[0].Color, 0.5f)
-                : new Vector4(0.0f, 0.0f, 0.0f, 0.5f);
+                ? new Vector4(note.Categories[0].Color, this.editorTransparency)
+                : new Vector4(0.0f, 0.0f, 0.0f, this.editorTransparency);
             ImGui.PushStyleColor(ImGuiCol.Button, color);
 
             var buttonLabel = note.Name;
@@ -610,7 +610,7 @@ namespace NeatNoter
             heightOffset += ImGui.GetStyle().ItemSpacing.Y;
             heightOffset -= ImGui.GetScrollY() * fontScale;
 
-            var color = new Vector4(category.Color, 0.5f);
+            var color = new Vector4(category.Color, this.editorTransparency);
             ImGui.PushStyleColor(ImGuiCol.Button, ImGui.GetColorU32(color));
 
             var buttonLabel = category.Name;
