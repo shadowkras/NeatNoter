@@ -710,10 +710,6 @@ namespace NeatNoter
                 }
             }
 
-            ImGui.Text($"{document?.WordCount}/{MaxSafeWordLenght}");
-            if (document?.WordCount > MaxSafeWordLenght)
-                ImGuiComponents.HelpMarker(Loc.Localize("EditorPerformanceLoss", "Warning, performance loss can occur when a note is more than 2048 characters."));
-
             if (ImGui.IsItemDeactivated() && ImGui.IsKeyPressed(ImGuiKey.Escape))
             {
                 if (document != null)
@@ -728,7 +724,19 @@ namespace NeatNoter
 
             ImGui.PopStyleColor();
 
-            if (!ImGui.BeginPopupContextItem(Loc.Localize("EditorContextMenu", "Editor Context Menu") + " " + document?.InternalName)) return;
+            if (ImGui.BeginPopupContextItem(Loc.Localize("EditorContextMenu", "Editor Context Menu") + " " + document?.InternalName))
+            {
+                this.DrawEditorContextMenu();
+                ImGui.EndPopup();
+            }
+
+            ImGui.Text($"{document?.WordCount}/{MaxSafeWordLenght}");
+            if (document?.WordCount > MaxSafeWordLenght)
+                ImGuiComponents.HelpMarker(Loc.Localize("EditorPerformanceLoss", "Warning, performance loss can occur when a note is more than 2048 characters."));
+        }
+
+        private void DrawEditorContextMenu()
+        {
             if (!this.minimalView && ImGui.Selectable(Loc.Localize("MinimalView", "Minimal view")))
             {
                 this.minimalView = true;
@@ -773,8 +781,6 @@ namespace NeatNoter
             {
                 this.SetNoteOverlay(null);
             }
-
-            ImGui.EndPopup();
         }
 
         private void DrawTransparencySlider(Vector2 mainWinPos, Vector2 mainWinSize)
