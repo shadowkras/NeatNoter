@@ -12,6 +12,7 @@ using Dalamud.Interface.Components;
 using Dalamud.Interface.Utility;
 using Dalamud.Logging;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
 
 namespace NeatNoter
 {
@@ -50,6 +51,7 @@ namespace NeatNoter
         private bool transparencyWindowVisible;
         private bool textEditable;
         private float editorTransparency;
+        private float defaultTransparency;
         private string noteSearchEntry;
         private UIState lastState;
         private UIState state;
@@ -125,6 +127,8 @@ namespace NeatNoter
                     this.DisplayDeprecationMessage();
                     return;
                 }
+
+                this.defaultTransparency = this.plugin.Configuration.DefaultTransparency;
 
                 switch (this.state)
                 {
@@ -496,9 +500,8 @@ namespace NeatNoter
             var windowPos = ImGui.GetWindowPos();
 
             var color = note.Categories.Count > 0
-                ? new Vector4(note.Categories[0].Color, this.editorTransparency)
-                : new Vector4(0.0f, 0.0f, 0.0f, this.editorTransparency);
-            ImGui.PushStyleColor(ImGuiCol.Button, color);
+                ? new Vector4(note.Categories[0].Color, this.defaultTransparency)
+                : new Vector4(0.0f, 0.0f, 0.0f, this.defaultTransparency);
 
             var buttonLabel = note.Name;
             if (this.plugin.Configuration.ShowContentPreview)
@@ -508,15 +511,16 @@ namespace NeatNoter
                     buttonLabel = note.Name[..(cutNameLength - i)] + "...";
             }
 
-            if (ImGui.Button(note.IdentifierString, new Vector2(ElementSizeX, heightMod)) && !this.plugin.NotebookService.Loading)
+            using (ImRaii.PushColor(ImGuiCol.Button, color))
             {
-                this.OpenNote(note);
+                if (ImGui.Button(note.IdentifierString, new Vector2(ElementSizeX, heightMod)) && !this.plugin.NotebookService.Loading)
+                {
+                    this.OpenNote(note);
+                }
+
+                if (ImGui.IsItemHovered())
+                    ImGui.SetTooltip(note.Name);
             }
-
-            if (ImGui.IsItemHovered())
-                ImGui.SetTooltip(note.Name);
-
-            ImGui.PopStyleColor();
 
             var calc = (index * (heightMod + ImGui.GetStyle().ItemSpacing.Y)) + heightOffset;
             var calcFont = calc + (ImGui.GetStyle().FramePadding.Y / 2);
@@ -579,17 +583,19 @@ namespace NeatNoter
                 foreach (var category in categories)
                 {
                     var isChecked = selectedCategories!.Contains(category);
-                    ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(category.Color, 1.0f));
-                    ImGui.PushStyleColor(ImGuiCol.CheckMark, new Vector4(category.Color, 1.0f));
-                    if (ImGui.Checkbox(category.InternalName, ref isChecked))
+                    using (ImRaii.PushColor(ImGuiCol.Text, new Vector4(category.Color, this.defaultTransparency)))
                     {
-                        if (isChecked)
-                            selectedCategories.Add(category);
-                        else
-                            selectedCategories.Remove(category);
+                        using (ImRaii.PushColor(ImGuiCol.CheckMark, new Vector4(category.Color, this.defaultTransparency)))
+                        {
+                            if (ImGui.Checkbox(category.InternalName, ref isChecked))
+                            {
+                                if (isChecked)
+                                    selectedCategories.Add(category);
+                                else
+                                    selectedCategories.Remove(category);
+                            }
+                        }
                     }
-
-                    ImGui.PopStyleColor(2);
                     if (ImGui.IsItemHovered() && !string.IsNullOrEmpty(category.Body))
                         ImGui.SetTooltip(category.Body);
                     ImGui.NextColumn();
@@ -609,23 +615,23 @@ namespace NeatNoter
             var heightMod = fontScale + ImGui.GetStyle().FramePadding.Y;
             heightOffset += ImGui.GetStyle().ItemSpacing.Y;
             heightOffset -= ImGui.GetScrollY() * fontScale;
-
-            var color = new Vector4(category.Color, this.editorTransparency);
-            ImGui.PushStyleColor(ImGuiCol.Button, ImGui.GetColorU32(color));
-
             var buttonLabel = category.Name;
-            var cutNameLength = Math.Min(category.Name.Length, 70);
-            for (var i = 1; i < cutNameLength && ImGui.CalcTextSize(buttonLabel).X > ElementSizeX - 22; i++)
-                buttonLabel = category.Name[..(cutNameLength - i)] + "...";
-            if (ImGui.Button(category.IdentifierString, new Vector2(ElementSizeX, heightMod)) && !this.plugin.NotebookService.Loading)
+
+            var color = new Vector4(category.Color, this.defaultTransparency);
+
+            using (ImRaii.PushColor(ImGuiCol.Button, ImGui.GetColorU32(color)))
             {
-                this.OpenCategory(category);
+                var cutNameLength = Math.Min(category.Name.Length, 70);
+                for (var i = 1; i < cutNameLength && ImGui.CalcTextSize(buttonLabel).X > ElementSizeX - 22; i++)
+                    buttonLabel = category.Name[..(cutNameLength - i)] + "...";
+                if (ImGui.Button(category.IdentifierString, new Vector2(ElementSizeX, heightMod)) && !this.plugin.NotebookService.Loading)
+                {
+                    this.OpenCategory(category);
+                }
+
+                if (ImGui.IsItemHovered() && !string.IsNullOrEmpty(category.Body))
+                    ImGui.SetTooltip(category.Body);
             }
-
-            if (ImGui.IsItemHovered() && !string.IsNullOrEmpty(category.Body))
-                ImGui.SetTooltip(category.Body);
-
-            ImGui.PopStyleColor();
 
             var calc = (index * (heightMod + ImGui.GetStyle().ItemSpacing.Y)) + heightOffset;
             var calcFont = calc + (ImGui.GetStyle().FramePadding.Y / 2);
@@ -696,33 +702,32 @@ namespace NeatNoter
                 color.W = this.editorTransparency;
             }
 
-            ImGui.PushStyleColor(ImGuiCol.FrameBg, color);
-
-            if (!this.textEditable) ImGui.GetIO().WantTextInput = false;
-
-            if (ImGui.InputTextMultiline(string.Empty, ref body, MaxNoteSize, new Vector2(ElementSizeX - (16 * ImGui.GetIO().FontGlobalScale), WindowSizeY - (this.minimalView ? 40 : 94) - 25), inputFlags))
+            using (ImRaii.PushColor(ImGuiCol.FrameBg, color))
             {
-                if (document != null)
+                if (!this.textEditable) ImGui.GetIO().WantTextInput = false;
+
+                if (ImGui.InputTextMultiline(string.Empty, ref body, MaxNoteSize, new Vector2(ElementSizeX - (16 * ImGui.GetIO().FontGlobalScale), WindowSizeY - (this.minimalView ? 40 : 94) - 25), inputFlags))
                 {
-                    document.Body = body;
-                    document.Modified = UnixTimestampHelper.CurrentTime();
-                    this.IsNoteDirty = true;
+                    if (document != null)
+                    {
+                        document.Body = body;
+                        document.Modified = UnixTimestampHelper.CurrentTime();
+                        this.IsNoteDirty = true;
+                    }
                 }
-            }
 
-            if (ImGui.IsItemDeactivated() && ImGui.IsKeyPressed(ImGuiKey.Escape))
-            {
-                if (document != null)
+                if (ImGui.IsItemDeactivated() && ImGui.IsKeyPressed(ImGuiKey.Escape))
                 {
-                    document.Body = this.previousNote;
-                    document.Modified = UnixTimestampHelper.CurrentTime();
-                    this.IsNoteDirty = true;
+                    if (document != null)
+                    {
+                        document.Body = this.previousNote;
+                        document.Modified = UnixTimestampHelper.CurrentTime();
+                        this.IsNoteDirty = true;
+                    }
                 }
+
+                this.previousNote = body;
             }
-
-            this.previousNote = body;
-
-            ImGui.PopStyleColor();
 
             if (ImGui.BeginPopupContextItem(Loc.Localize("EditorContextMenu", "Editor Context Menu") + " " + document?.InternalName))
             {
@@ -824,14 +829,15 @@ namespace NeatNoter
 
         private void DisplayDeprecationMessage()
         {
-            ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.DalamudYellow);
-            ImGui.TextWrapped("NeatNoter will stop working with the Dawntrail launch and won't get updates.\n" +
-                              "I'm no longer interested in supporting the plugin and I haven't been able to find a developer to take over.\n" +
-                              "Please use the Export Button below to save your notes as a CSV file.\n" +
-                              "Look into other plugins like NOTED or other note taking tools.\n" +
-                              "You'll see this message when the game starts, but you can access your notes by clicking OK.\n" +
-                              "Thank you for using NeatNoter!");
-            ImGui.PopStyleColor();
+            using (ImRaii.PushColor(ImGuiCol.Text, ImGuiColors.DalamudYellow))
+            {
+                ImGui.TextWrapped("NeatNoter will stop working with the Dawntrail launch and won't get updates.\n" +
+                                  "I'm no longer interested in supporting the plugin and I haven't been able to find a developer to take over.\n" +
+                                  "Please use the Export Button below to save your notes as a CSV file.\n" +
+                                  "Look into other plugins like NOTED or other note taking tools.\n" +
+                                  "You'll see this message when the game starts, but you can access your notes by clicking OK.\n" +
+                                  "Thank you for using NeatNoter!");
+            }
 
             ImGui.Spacing();
             if (ImGui.Button("Export"))

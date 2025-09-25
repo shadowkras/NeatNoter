@@ -5,6 +5,7 @@ using Dalamud.DrunkenToad.Extensions;
 using Dalamud.Interface.Colors;
 using Dalamud.Interface.Utility;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
 
 namespace NeatNoter
 {
@@ -43,7 +44,7 @@ namespace NeatNoter
         private void SaveFrequency()
         {
             ImGui.TextColored(ImGuiColors.DalamudViolet, Loc.Localize("Save", "Save Frequency"));
-            ImGui.BeginChild("###Save", new Vector2(-1, 110f), true);
+            using (ImRaii.Child("###Save", new Vector2(-1, 110f), true))
             {
                 ImGui.Text(Loc.Localize("SaveFrequency", "Save (seconds)"));
                 var saveFrequency = this.plugin.Configuration.SaveFrequency.FromMillisecondsToSeconds();
@@ -64,7 +65,6 @@ namespace NeatNoter
                 }
             }
 
-            ImGui.EndChild();
             ImGui.Spacing();
         }
 
@@ -82,7 +82,7 @@ namespace NeatNoter
             }
 
             ImGui.TextColored(ImGuiColors.DalamudViolet, Loc.Localize("Display", "Display"));
-            ImGui.BeginChild("###Display", new Vector2(-1, 120f), true);
+            using (ImRaii.Child("###Display", new Vector2(-1, 120f), true))
             {
                 var showContentPreview = this.plugin.Configuration.ShowContentPreview;
                 if (ImGui.Checkbox(Loc.Localize("ShowContentPreview", "Show content preview"), ref showContentPreview))
@@ -108,29 +108,22 @@ namespace NeatNoter
                     }
                 }
 
-                var lockPosition = this.plugin.Configuration.LockPosition;
-                if (ImGui.Checkbox(Loc.Localize("LockPosition", "Lock position"), ref lockPosition))
+                ImGui.Text(Loc.Localize("DefaultTransparency", "DefaultTransparency"));
+                var defaultTransparency = this.plugin.Configuration.DefaultTransparency;
+                if (ImGui.SliderFloat("###NeatNoter_DefaultTransparency_Slider", ref defaultTransparency, 0.1f, 1.0f))
                 {
-                    this.plugin.Configuration.LockPosition = lockPosition;
-                    this.plugin.SaveConfig();
-                }
-
-                var lockSize = this.plugin.Configuration.LockSize;
-                if (ImGui.Checkbox(Loc.Localize("LockSize", "Lock resize"), ref lockSize))
-                {
-                    this.plugin.Configuration.LockSize = lockSize;
+                    this.plugin.Configuration.DefaultTransparency = defaultTransparency;
                     this.plugin.SaveConfig();
                 }
             }
 
-            ImGui.EndChild();
             ImGui.Spacing();
         }
 
         private void DrawSearch()
         {
             ImGui.TextColored(ImGuiColors.DalamudViolet, Loc.Localize("Search", "Search"));
-            ImGui.BeginChild("###Search", new Vector2(-1, 40f), true);
+            using (ImRaii.Child("###Search", new Vector2(-1, 40f), true))
             {
                 var includeBodies = this.plugin.Configuration.IncludeNoteBodiesInSearch;
                 if (ImGui.Checkbox(Loc.Localize("IncludeNoteContents", "Include note contents"), ref includeBodies))
@@ -140,14 +133,13 @@ namespace NeatNoter
                 }
             }
 
-            ImGui.EndChild();
             ImGui.Spacing();
         }
 
         private void DrawOverlay()
         {
             ImGui.TextColored(ImGuiColors.DalamudViolet, Loc.Localize("Overlay", "Overlay"));
-            ImGui.BeginChild("###Overlay", new Vector2(-1, 120f), true);
+            using (ImRaii.Child("###Overlay", new Vector2(-1, 120f), true))
             {
                 ImGui.Text(Loc.Localize("OverlayFontScale", "Overlay Window Font Scale"));
                 var overlayScale = this.plugin.Configuration.OverlayWindowFontScale;
@@ -179,7 +171,6 @@ namespace NeatNoter
                 }
             }
 
-            ImGui.EndChild();
             ImGui.Spacing();
         }
 
