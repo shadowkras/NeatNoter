@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Dalamud.NET.Sdk/13.0.0">
 	<PropertyGroup>
-		<Version>2.7.3</Version>
+		<Version>2.7.4</Version>
 		<Title>NeatNoter</Title>
 		<Authors>kalilistic, karashiiro, shadowkras</Authors>
 		<TargetFramework>net9.0-windows</TargetFramework>
