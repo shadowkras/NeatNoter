@@ -47,9 +47,9 @@ namespace NeatNoter
         public int FullSaveFrequency { get; set; } = 14400000;
 
         /// <summary>
-        /// Gets or set the default transparency for the note index.
+        /// Gets or sets the default transparency for the note index.
         /// </summary>
-        public float DefaultTransparency { get; set; } = 0.7f;
+        public float DefaultIndexTransparency { get; set; } = 0.7f;
 
         /// <summary>
         /// Gets or sets a value indicating whether no category notes are selected.

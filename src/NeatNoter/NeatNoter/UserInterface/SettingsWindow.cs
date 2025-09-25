@@ -108,13 +108,15 @@ namespace NeatNoter
                     }
                 }
 
-                ImGui.Text(Loc.Localize("DefaultTransparency", "DefaultTransparency"));
-                var defaultTransparency = this.plugin.Configuration.DefaultTransparency;
-                if (ImGui.SliderFloat("###NeatNoter_DefaultTransparency_Slider", ref defaultTransparency, 0.1f, 1.0f))
+                ImGui.Text(Loc.Localize("DefaultIndexTransparency", "Default Index Transparency"));
+                var defaultTransparency = this.plugin.Configuration.DefaultIndexTransparency;
+                if (ImGui.SliderFloat("###NeatNoter_DefaultIndexTransparency_Slider", ref defaultTransparency, 0.1f, 1.0f))
                 {
-                    this.plugin.Configuration.DefaultTransparency = defaultTransparency;
+                    this.plugin.Configuration.DefaultIndexTransparency = defaultTransparency;
                     this.plugin.SaveConfig();
                 }
+                if (ImGui.IsItemHovered())
+                    ImGui.SetTooltip(Loc.Localize("DefaultIndexTransparencyTooltip", "Sets the default background transparency for the note index."));
             }
 
             ImGui.Spacing();

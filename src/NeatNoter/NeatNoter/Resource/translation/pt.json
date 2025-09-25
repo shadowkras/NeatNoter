@@ -215,6 +215,14 @@
         "message": "Travar redimensionamento",
         "description": "SettingsWindow.DrawDisplay"
     },
+    "DefaultIndexTransparency": {
+        "message": "Transparência padrão do índice",
+        "description": "SettingsWindow.DrawSearch"
+    },
+    "DefaultIndexTransparencyTooltip": {
+        "message": "Define a transparencia padrão para o fundo da lista de notas.",
+        "description": "SettingsWindow.DrawSearch"
+    },
     "Search": {
         "message": "Busca",
         "description": "SettingsWindow.DrawSearch"
@@ -243,6 +251,7 @@
         "message": "Buscar",
         "description": "SettingsWindow.DrawBackup"
     },
+
     "HideConfigConfirmationHeader": {
         "message": "NeatNoter Confirmação para Deletar",
         "description": "NotebookWindow.DrawHideConfigurationConfirmationWindow"

@@ -128,7 +128,7 @@ namespace NeatNoter
                     return;
                 }
 
-                this.defaultTransparency = this.plugin.Configuration.DefaultTransparency;
+                this.defaultTransparency = this.plugin.Configuration.DefaultIndexTransparency;
 
                 switch (this.state)
                 {
