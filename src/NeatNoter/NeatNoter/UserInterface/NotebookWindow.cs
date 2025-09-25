@@ -37,7 +37,7 @@ namespace NeatNoter
         public Category? CurrentCategory;
 
         private const int MaxNoteSize = 1024 * 4196; // You can fit the complete works of Shakespeare in 3.5MB, so this is probably fine.
-        private static readonly uint TextColor = ImGui.GetColorU32(ImGuiCol.Text);
+        private uint TextColor = ImGui.GetColorU32(ImGuiCol.Text);
         private static readonly ushort MaxSafeWordLenght = 2048;
 
         private SettingsWindow settingsWindow;
@@ -58,8 +58,6 @@ namespace NeatNoter
         private string previousNote;
         private ImGuiTabItemFlags noteTabFlags;
         private ImGuiTabItemFlags categoryTabFlags;
-
-
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NotebookWindow"/> class.
@@ -128,6 +126,7 @@ namespace NeatNoter
                     return;
                 }
 
+                this.TextColor = ImGui.GetColorU32(ImGuiCol.Text);
                 this.defaultTransparency = this.plugin.Configuration.DefaultIndexTransparency;
 
                 switch (this.state)
@@ -481,6 +480,7 @@ namespace NeatNoter
                 var color = this.CurrentCategory!.Color;
                 if (ImGui.ColorEdit3(Loc.Localize("Color", "Color"), ref color))
                 {
+                    // We don't want to change the color reference, so we set the value manually
                     this.CurrentCategory.Color = color;
                     this.plugin.NotebookService.SaveCategory(this.CurrentCategory);
                 }
