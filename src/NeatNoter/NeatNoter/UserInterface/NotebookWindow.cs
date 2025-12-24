@@ -5,7 +5,6 @@ using System.Numerics;
 using System.Text;
 
 using CheapLoc;
-using Dalamud.DrunkenToad.Helpers;
 using Dalamud.Interface;
 using Dalamud.Interface.Colors;
 using Dalamud.Interface.Components;
@@ -680,7 +679,7 @@ namespace NeatNoter
                 if (ImGui.InputText(document?.GetTypeName() + " " + Loc.Localize("Title", "Title"), ref title, 128))
                 {
                     document!.Name = title;
-                    document.Modified = UnixTimestampHelper.CurrentTime();
+                    document.Modified = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
                     this.IsNoteDirty = true;
                 }
             }
@@ -711,7 +710,7 @@ namespace NeatNoter
                     if (document != null)
                     {
                         document.Body = body;
-                        document.Modified = UnixTimestampHelper.CurrentTime();
+                        document.Modified = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
                         this.IsNoteDirty = true;
                     }
                 }
@@ -721,7 +720,7 @@ namespace NeatNoter
                     if (document != null)
                     {
                         document.Body = this.previousNote;
-                        document.Modified = UnixTimestampHelper.CurrentTime();
+                        document.Modified = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
                         this.IsNoteDirty = true;
                     }
                 }

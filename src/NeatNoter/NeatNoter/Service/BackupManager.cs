@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-using Dalamud.DrunkenToad.Helpers;
-
 namespace NeatNoter;
 
 public class BackupManager
@@ -20,7 +18,8 @@ public class BackupManager
     {
         try
         {
-            var backupDir = $"{this.dataPath}{prefix}{UnixTimestampHelper.CurrentTime()}/";
+            var now = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            var backupDir = $"{this.dataPath}{prefix}{now}/";
             Directory.CreateDirectory(backupDir);
             var files = Directory.GetFiles(this.dataPath);
             foreach (var file in files)

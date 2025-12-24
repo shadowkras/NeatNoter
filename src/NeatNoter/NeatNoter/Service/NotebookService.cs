@@ -1,16 +1,10 @@
-using System;
-using System.Collections.Generic;
 using System.Dynamic;
 using System.Globalization;
-using System.IO;
-using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Timers;
 
 using CheapLoc;
-using Dalamud.DrunkenToad.Helpers;
-using Dalamud.Logging;
 using Newtonsoft.Json;
 
 using Timer = System.Timers.Timer;
@@ -121,7 +115,7 @@ public class NotebookService : BaseRepository
             }
 
             // Generate filename with current time in Unix timestamp format
-            var timestamp = UnixTimestampHelper.CurrentTime();
+            var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             var filename = $"export_{timestamp}.csv";
             var fullPath = Path.Combine(exportDir, filename);
 
@@ -421,13 +415,14 @@ public class NotebookService : BaseRepository
     public Note CreateNote()
     {
         var uid = DateTime.Now.ToBinary();
+        var currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
         var note = new Note
         {
             InternalName = Loc.Localize("DefaultNoteName", "New Note") + "##" + uid,
             Body = string.Empty,
             Categories = new List<Category>(),
-            Created = UnixTimestampHelper.CurrentTime(),
-            Modified = UnixTimestampHelper.CurrentTime(),
+            Created = currentTime,
+            Modified = currentTime,
             IsVisible = true,
         };
         lock (this.locker)
@@ -447,14 +442,15 @@ public class NotebookService : BaseRepository
     public Category CreateCategory()
     {
         var uid = DateTime.Now.ToBinary();
+        var currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
         var rand = new Random();
         var category = new Category
         {
             InternalName = Loc.Localize("DefaultCategoryName", "New Category") + "##" + uid,
             Body = Loc.Localize("DefaultCategoryBody", "Category description"),
             Color = new Vector3((float)rand.NextDouble(), (float)rand.NextDouble(), (float)rand.NextDouble()),
-            Created = UnixTimestampHelper.CurrentTime(),
-            Modified = UnixTimestampHelper.CurrentTime(),
+            Created = currentTime,
+            Modified = currentTime,
         };
         lock (this.locker)
         {

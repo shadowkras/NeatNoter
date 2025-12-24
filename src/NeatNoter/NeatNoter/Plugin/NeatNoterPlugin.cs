@@ -1,10 +1,6 @@
-using System;
 using System.Reflection;
-using System.Timers;
-using Dalamud.DrunkenToad.Extensions;
-using Dalamud.DrunkenToad.Helpers;
+using System.Threading;
 using Dalamud.IoC;
-using Dalamud.Logging;
 using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
 using NeatNoter.Localization;
@@ -34,7 +30,7 @@ namespace NeatNoter
         /// </summary>
         public BackupManager BackupManager;
 
-        private readonly Timer backupTimer;
+        private Timer? backupTimer;
         private readonly LegacyLoc localization;
 
         /// <summary>
@@ -66,9 +62,15 @@ namespace NeatNoter
             this.NotebookService = new NotebookService(this);
 
             // run backup
-            this.backupTimer = new Timer { Interval = this.Configuration.BackupFrequency, Enabled = false };
-            this.backupTimer.Elapsed += this.BackupTimerOnElapsed;
-            var pluginVersion = Assembly.GetExecutingAssembly().VersionNumber();
+            this.backupTimer = new Timer(
+                this.BackupTimerCallback,
+                null,
+                Timeout.InfiniteTimeSpan,
+                Timeout.InfiniteTimeSpan);
+            this.backupTimer.Change(
+                TimeSpan.FromMilliseconds(this.Configuration.BackupFrequency),
+                TimeSpan.FromMilliseconds(this.Configuration.BackupFrequency));
+            var pluginVersion = GetPluginVersionNumber();
             if (this.Configuration.PluginVersion < pluginVersion)
             {
                 PluginLog.Warning("Running backup since new version detected.");
@@ -78,7 +80,7 @@ namespace NeatNoter
             }
             else
             {
-                this.BackupTimerOnElapsed(this, null);
+                this.BackupTimerOnElapsed();
             }
 
             // attempt to migrate if needed
@@ -87,7 +89,9 @@ namespace NeatNoter
             {
                 this.HandleJustInstalled();
                 this.NotebookService.Start();
-                this.backupTimer.Enabled = true;
+                this.backupTimer?.Change(
+                    TimeSpan.FromMilliseconds(this.Configuration.BackupFrequency),
+                    TimeSpan.FromMilliseconds(this.Configuration.BackupFrequency));
                 DocumentSortType.Init();
                 this.WindowManager = new WindowManager(this);
                 this.PluginCommandManager = new PluginCommandManager(this);
@@ -138,6 +142,16 @@ namespace NeatNoter
             return PluginInterface.GetPluginConfigDirectory();
         }
 
+        public static int GetPluginVersionNumber()
+        {
+            var v = Assembly.GetExecutingAssembly().GetName().Version ?? new Version(0, 0, 0);
+
+            return
+                (v.Major * 1_000_000) +
+                (v.Minor * 1_000) +
+                v.Build;
+        }
+
         /// <inheritdoc />
         public void Dispose()
         {
@@ -164,8 +178,13 @@ namespace NeatNoter
                 if (disposing)
                 {
                     this.WindowManager.Dispose();
-                    this.backupTimer.Elapsed -= this.BackupTimerOnElapsed;
-                    this.backupTimer.Dispose();
+
+                    // Stop timer first (optional but clean)
+                    this.backupTimer?.Change(
+                        Timeout.InfiniteTimeSpan,
+                        Timeout.InfiniteTimeSpan);
+
+                    this.backupTimer?.Dispose();
                     this.PluginCommandManager.Dispose();
                     PluginInterface.SavePluginConfig(this.Configuration);
                     this.NotebookService.Dispose();
@@ -190,12 +209,21 @@ namespace NeatNoter
             this.SaveConfig();
         }
 
-        private void BackupTimerOnElapsed(object? sender, ElapsedEventArgs? e)
+        private void BackupTimerCallback(object? state)
         {
-            if (UnixTimestampHelper.CurrentTime() > this.Configuration.LastBackup + this.Configuration.BackupFrequency)
+            this.BackupTimerOnElapsed();
+        }
+
+        private void BackupTimerOnElapsed()
+        {
+            var now = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+
+            if (now > this.Configuration.LastBackup + this.Configuration.BackupFrequency)
             {
                 PluginLog.Warning("Running backup due to frequency timer.");
-                this.Configuration.LastBackup = UnixTimestampHelper.CurrentTime();
+
+                this.Configuration.LastBackup = now;
+
                 this.BackupManager.CreateBackup();
                 this.BackupManager.DeleteBackups(this.Configuration.BackupRetention);
             }
@@ -203,9 +231,12 @@ namespace NeatNoter
 
         private void RunUpgradeBackup()
         {
-            this.Configuration.LastBackup = UnixTimestampHelper.CurrentTime();
+            var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            this.Configuration.LastBackup = timestamp;
             this.BackupManager.CreateBackup("upgrade/v" + this.Configuration.PluginVersion + "_");
             this.BackupManager.DeleteBackups(this.Configuration.BackupRetention);
         }
+
+        
     }
 }

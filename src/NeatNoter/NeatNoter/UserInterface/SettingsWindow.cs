@@ -1,10 +1,9 @@
 using System.Numerics;
 
 using CheapLoc;
-using Dalamud.DrunkenToad.Extensions;
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Colors;
 using Dalamud.Interface.Utility;
-using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Utility.Raii;
 
 namespace NeatNoter
@@ -32,6 +31,26 @@ namespace NeatNoter
             this.IsShowOverlayPositionConfirmationWindowVisible = false;
         }
 
+        private static int FromMillisecondsToSeconds(int milliseconds)
+        {
+            return milliseconds / 1000;
+        }
+
+        private static int FromSecondsToMilliseconds(int seconds)
+        {
+            return seconds * 1000;
+        }
+
+        private static int FromMillisecondsToHours(int milliseconds)
+        {
+            return milliseconds / 3600000;
+        }
+
+        private static int FromHoursToMilliseconds(int hours)
+        {
+            return hours * 3600000;
+        }
+
         /// <inheritdoc/>
         public override void Draw()
         {
@@ -47,19 +66,19 @@ namespace NeatNoter
             using (ImRaii.Child("###Save", new Vector2(-1, 110f), true))
             {
                 ImGui.Text(Loc.Localize("SaveFrequency", "Save (seconds)"));
-                var saveFrequency = this.plugin.Configuration.SaveFrequency.FromMillisecondsToSeconds();
+                var saveFrequency = FromMillisecondsToSeconds(this.plugin.Configuration.SaveFrequency);
                 if (ImGui.SliderInt("###NeatNoter_SaveFrequency_Slider", ref saveFrequency, 1, 300))
                 {
-                    this.plugin.Configuration.SaveFrequency = saveFrequency.FromSecondsToMilliseconds();
+                    this.plugin.Configuration.SaveFrequency = FromSecondsToMilliseconds(saveFrequency);
                     this.plugin.SaveConfig();
                     this.plugin.NotebookService.UpdateSaveFrequency(this.plugin.Configuration.SaveFrequency);
                 }
 
                 ImGui.Text(Loc.Localize("FullSaveFrequency", "Full Save (hours)"));
-                var fullSaveFrequency = this.plugin.Configuration.FullSaveFrequency.FromMillisecondsToHours();
+                var fullSaveFrequency = FromMillisecondsToHours(this.plugin.Configuration.FullSaveFrequency);
                 if (ImGui.SliderInt("###NeatNoter_FullSaveFrequency_Slider", ref fullSaveFrequency, 1, 12))
                 {
-                    this.plugin.Configuration.FullSaveFrequency = fullSaveFrequency.FromHoursToMilliseconds();
+                    this.plugin.Configuration.FullSaveFrequency = FromHoursToMilliseconds(fullSaveFrequency);
                     this.plugin.SaveConfig();
                     this.plugin.NotebookService.UpdateFullSaveFrequency(this.plugin.Configuration.FullSaveFrequency);
                 }
@@ -232,5 +251,7 @@ namespace NeatNoter
 
             return ret;
         }
+
+        
     }
 }
