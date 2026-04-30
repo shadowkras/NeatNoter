@@ -25,7 +25,7 @@ namespace NeatNoter
         {
             this.plugin = plugin;
             this.RespectCloseHotkey = true;
-            this.Size = new Vector2(300f, 560f);
+            this.Size = new Vector2(300f, 580f);
             this.SizeCondition = ImGuiCond.Appearing;
             this.IsHideConfigurationConfirmationWindowVisible = false;
             this.IsShowOverlayPositionConfirmationWindowVisible = false;
@@ -160,7 +160,7 @@ namespace NeatNoter
         private void DrawOverlay()
         {
             ImGui.TextColored(ImGuiColors.DalamudViolet, Loc.Localize("Overlay", "Overlay"));
-            using (ImRaii.Child("###Overlay", new Vector2(-1, 120f), true))
+            using (ImRaii.Child("###Overlay", new Vector2(-1, 150f), true))
             {
                 ImGui.Text(Loc.Localize("OverlayFontScale", "Overlay Window Font Scale"));
                 var overlayScale = this.plugin.Configuration.OverlayWindowFontScale;
@@ -170,14 +170,25 @@ namespace NeatNoter
                     this.plugin.SaveConfig();
                 }
 
-                var overlayColor = this.plugin.Configuration.OverlayWindowFontColor;
+                var overlayFontColor = this.plugin.Configuration.OverlayWindowFontColor;
 
                 ImGui.Text(Loc.Localize("OverlayFontColor", "Overlay Window Font Color"));
                 ImGui.SameLine();
 
-                if (ImGui.ColorEdit4("##colfb", ref overlayColor, ImGuiColorEditFlags.NoInputs))
+                if (ImGui.ColorEdit4("##colfb", ref overlayFontColor, ImGuiColorEditFlags.NoInputs))
                 {
-                    this.plugin.Configuration.OverlayWindowFontColor = overlayColor;
+                    this.plugin.Configuration.OverlayWindowFontColor = overlayFontColor;
+                    this.plugin.SaveConfig();
+                }
+
+                var overlayBackgroundColor = this.plugin.Configuration.OverlayWindowBackgroundColor;
+
+                ImGui.Text(Loc.Localize("OverlayFontColor", "Overlay Window Background Color"));
+                ImGui.SameLine();
+
+                if (ImGui.ColorEdit4("##colfbb", ref overlayBackgroundColor, ImGuiColorEditFlags.NoInputs | ImGuiColorEditFlags.AlphaBar))
+                {
+                    this.plugin.Configuration.OverlayWindowBackgroundColor = overlayBackgroundColor;
                     this.plugin.SaveConfig();
                 }
 

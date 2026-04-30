@@ -25,6 +25,7 @@ namespace NeatNoter.NeatNoter.UserInterface
             this.Size = new Vector2(400, 600) * ImGui.GetIO().FontGlobalScale;
             this.SizeCondition = ImGuiCond.FirstUseEver;
             this.Flags = ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoTitleBar;
+
             this.Position = null;
         }
 
@@ -50,19 +51,39 @@ namespace NeatNoter.NeatNoter.UserInterface
             {
                 if (this.CurrentNote != null)
                 {
+
                     using (var window = ImRaii.Popup("#overlay"))
                     {
-                        ImGui.SetWindowFontScale(this.plugin.Configuration.OverlayWindowFontScale);
-                        ImGui.TextColored(this.plugin.Configuration.OverlayWindowFontColor, this.CurrentNote.Name + Environment.NewLine + this.CurrentNote.Body);
-                        ImGui.SetWindowFontScale(1.0f);
+                        var text = this.CurrentNote.Name + Environment.NewLine + this.CurrentNote.Body;
 
-                        if (ImGui.BeginPopupContextItem("###NeatNoter_" + this.CurrentNote.IdentifierString, ImGuiPopupFlags.MouseButtonRight))
+                        // Apply font scale BEFORE measuring
+                        ImGui.SetWindowFontScale(this.plugin.Configuration.OverlayWindowFontScale);
+
+                        var textSize = ImGui.CalcTextSize(text);
+
+                        System.Numerics.Vector2 padding = new System.Numerics.Vector2(10f, 10f);
+                        System.Numerics.Vector2 childSize = textSize + padding;
+
+                        ImGui.PushStyleColor(ImGuiCol.ChildBg, this.plugin.Configuration.OverlayWindowBackgroundColor);
+
+                        // Child with computed size
+                        using (ImRaii.Child("###NeatNoter_OverlayChild", childSize, false, ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoTitleBar))
                         {
-                            if (ImGui.Selectable(Loc.Localize("RemoveNoteOverlay", "Remove as Note Overlay")))
+                            ImGui.TextColored(this.plugin.Configuration.OverlayWindowFontColor, text);
+
+                            if (ImGui.BeginPopupContextItem("###NeatNoter_" + this.CurrentNote.IdentifierString, ImGuiPopupFlags.MouseButtonRight))
                             {
-                                this.CurrentNote = null;
+                                if (ImGui.Selectable(Loc.Localize("RemoveNoteOverlay", "Remove as Note Overlay")))
+                                {
+                                    this.CurrentNote = null;
+                                }
                             }
                         }
+
+                        ImGui.PopStyleColor();
+
+                        // Reset scale AFTER everything
+                        ImGui.SetWindowFontScale(1.0f);
                     }
                 }
             }

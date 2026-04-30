@@ -113,8 +113,19 @@ namespace NeatNoter
         /// </summary>
         public bool ShowConfigurationButton { get; set; } = true;
 
+        /// <summary>
+        /// Gets or sets a value indicating the font scale of the overlay window.
+        /// </summary>
         public float OverlayWindowFontScale { get; set; } = 1.0f;
 
+        /// <summary>
+        /// Gets or sets a value indicating the font color of the overlay window.
+        /// </summary>
         public Vector4 OverlayWindowFontColor { get; set; } = new Vector4(0, 255, 0, 255);
+
+        /// <summary>
+        /// Gets or sets a value indicating the background color of the overlay window. The alpha channel controls the transparency.
+        /// </summary>
+        public Vector4 OverlayWindowBackgroundColor { get; set; } = new Vector4(0, 0, 0, 0);
     }
 }

@@ -166,7 +166,7 @@ namespace NeatNoter
             {
                 this.TitleBarButtons = new()
                 {
-                    new TitleBarButton()
+                    new Dalamud.Interface.Windowing.TitleBarButton()
                     {
                         AvailableClickthrough = true,
                         Icon = FontAwesomeIcon.Cog,
@@ -703,9 +703,20 @@ namespace NeatNoter
 
             using (ImRaii.PushColor(ImGuiCol.FrameBg, color))
             {
-                if (!this.textEditable) ImGui.GetIO().WantTextInput = false;
+                if (!this.textEditable)
+                    ImGui.GetIO().WantTextInput = false;
 
-                if (ImGui.InputTextMultiline(string.Empty, ref body, MaxNoteSize, new Vector2(ElementSizeX - (16 * ImGui.GetIO().FontGlobalScale), WindowSizeY - (this.minimalView ? 40 : 94) - 25), inputFlags))
+                float scale = ImGui.GetIO().FontGlobalScale;
+
+                // Available space inside window
+                var available = ImGui.GetContentRegionAvail();
+
+                // Reserve space for footer (character count, etc.)
+                float footerHeight = ImGui.GetTextLineHeightWithSpacing() * 2.0f; // adjust if needed
+
+                var inputSize = new Vector2(available.X, available.Y - footerHeight);
+
+                if (ImGui.InputTextMultiline(string.Empty, ref body, MaxNoteSize, inputSize, inputFlags))
                 {
                     if (document != null)
                     {
