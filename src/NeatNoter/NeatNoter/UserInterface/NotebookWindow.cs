@@ -40,8 +40,7 @@ namespace NeatNoter
         private static readonly ushort MaxSafeWordLenght = 2048;
 
         private SettingsWindow settingsWindow;
-
-        private string exportResult = string.Empty;
+        
         private bool isDeprecationWarningVisible = false;
         private bool categoryWindowVisible;
         private bool deletionWindowVisible;
@@ -119,11 +118,6 @@ namespace NeatNoter
             try
             {
                 this.SetWindowFlags();
-                if (this.isDeprecationWarningVisible)
-                {
-                    this.DisplayDeprecationMessage();
-                    return;
-                }
 
                 this.TextColor = ImGui.GetColorU32(ImGuiCol.Text);
                 this.defaultTransparency = this.plugin.Configuration.DefaultIndexTransparency;
@@ -835,35 +829,6 @@ namespace NeatNoter
 
             this.lastState = this.state;
             this.state = newState;
-        }
-
-        private void DisplayDeprecationMessage()
-        {
-            using (ImRaii.PushColor(ImGuiCol.Text, ImGuiColors.DalamudYellow))
-            {
-                ImGui.TextWrapped("NeatNoter will stop working with the Dawntrail launch and won't get updates.\n" +
-                                  "I'm no longer interested in supporting the plugin and I haven't been able to find a developer to take over.\n" +
-                                  "Please use the Export Button below to save your notes as a CSV file.\n" +
-                                  "Look into other plugins like NOTED or other note taking tools.\n" +
-                                  "You'll see this message when the game starts, but you can access your notes by clicking OK.\n" +
-                                  "Thank you for using NeatNoter!");
-            }
-
-            ImGui.Spacing();
-            if (ImGui.Button("Export"))
-            {
-                this.exportResult = this.plugin.NotebookService.ExportNotes();
-            }
-
-            ImGui.SameLine();
-            if (ImGui.Button("OK"))
-            {
-                this.isDeprecationWarningVisible = false;
-            }
-
-            ImGui.Text(this.exportResult);
-
-            return;
         }
 
         private void SetNoteOverlay(Note? note)

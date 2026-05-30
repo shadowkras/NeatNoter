@@ -115,7 +115,7 @@ public class NotebookService : BaseRepository
             }
 
             // Generate filename with current time in Unix timestamp format
-            var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            var timestamp = DateTime.UtcNow.ToString("yyyy-MM-dd_HH-mm-ss");
             var filename = $"export_{timestamp}.csv";
             var fullPath = Path.Combine(exportDir, filename);
 

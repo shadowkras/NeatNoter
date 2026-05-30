@@ -18,7 +18,7 @@ public class BackupManager
     {
         try
         {
-            var now = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            var now = DateTime.UtcNow.ToString("yyyy-MM-dd_HH-mm-ss");
             var backupDir = $"{this.dataPath}{prefix}{now}/";
             Directory.CreateDirectory(backupDir);
             var files = Directory.GetFiles(this.dataPath);

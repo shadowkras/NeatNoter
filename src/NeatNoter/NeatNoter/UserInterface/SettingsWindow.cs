@@ -15,6 +15,8 @@ namespace NeatNoter
     {
         public bool IsHideConfigurationConfirmationWindowVisible;
         public bool IsShowOverlayPositionConfirmationWindowVisible;
+        public bool IsShowExportConfirmationWindowVisible;
+        private string exportResult = string.Empty;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SettingsWindow"/> class.
@@ -29,6 +31,7 @@ namespace NeatNoter
             this.SizeCondition = ImGuiCond.Appearing;
             this.IsHideConfigurationConfirmationWindowVisible = false;
             this.IsShowOverlayPositionConfirmationWindowVisible = false;
+            this.IsShowExportConfirmationWindowVisible = false;
         }
 
         private static int FromMillisecondsToSeconds(int milliseconds)
@@ -63,7 +66,7 @@ namespace NeatNoter
         private void SaveFrequency()
         {
             ImGui.TextColored(ImGuiColors.DalamudViolet, Loc.Localize("Save", "Save Frequency"));
-            using (ImRaii.Child("###Save", new Vector2(-1, 110f), true))
+            using (ImRaii.Child("###Save", new Vector2(-1, 140f), true))
             {
                 ImGui.Text(Loc.Localize("SaveFrequency", "Save (seconds)"));
                 var saveFrequency = FromMillisecondsToSeconds(this.plugin.Configuration.SaveFrequency);
@@ -81,6 +84,16 @@ namespace NeatNoter
                     this.plugin.Configuration.FullSaveFrequency = FromHoursToMilliseconds(fullSaveFrequency);
                     this.plugin.SaveConfig();
                     this.plugin.NotebookService.UpdateFullSaveFrequency(this.plugin.Configuration.FullSaveFrequency);
+                }
+
+                if (ImGui.Button(Loc.Localize("ExportNotes", "Export") + "###NeatNoter_Export_Notes"))
+                {
+                    this.IsShowExportConfirmationWindowVisible = true;
+                }
+
+                if (this.DrawHideNoteExportWindow(ref this.IsShowExportConfirmationWindowVisible))
+                {
+                    this.IsShowExportConfirmationWindowVisible = false;
                 }
             }
 
@@ -263,6 +276,41 @@ namespace NeatNoter
             return ret;
         }
 
-        
+        private bool DrawHideNoteExportWindow(ref bool isVisible)
+        {
+            if (!isVisible)
+                return false;
+
+            var ret = false;
+
+            ImGui.SetNextWindowSize(ImGuiHelpers.ScaledVector2(350f, 180f), ImGuiCond.Always);
+            ImGui.Begin(Loc.Localize("ExportNotesConfirmationHeader", "NeatNoter Export Confirmation"), ImGuiWindowFlags.NoResize);
+
+            ImGui.Text(Loc.Localize("ExportNotesConfirmationSubHeader", "Are you sure you want to export your notes?"));
+
+            if (!string.IsNullOrEmpty(this.exportResult))
+            {
+                ImGui.Separator();
+
+                ImGui.BeginChild("ExportResult", new Vector2(0, 80), true);
+                ImGui.TextWrapped(this.exportResult);
+                ImGui.EndChild();
+            }
+
+            if (ImGui.Button(Loc.Localize("Export", "Export")))
+            {
+                this.exportResult = this.plugin.NotebookService.ExportNotes();
+            }
+
+            ImGui.SameLine();
+            if (ImGui.Button(Loc.Localize("Close", "Close")))
+            {
+                isVisible = false;
+            }
+
+            ImGui.End();
+
+            return ret;
+        }
     }
 }
